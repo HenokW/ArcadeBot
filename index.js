@@ -48,7 +48,8 @@ client.on("message", async message =>
 	if(message.channel.type === "dm") return;
 	if(message.author.bot) return;
 
-	let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'guild', Number(message.guild.id));
+	let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'id', Number(message.guild.id));
+
 	let args = message.content.slice(guildInfo.prefix.length).trim().split(' ');
 	let cmd = args.shift().toLowerCase();
 
@@ -72,11 +73,15 @@ async function startup()
 	await dirCheck();
 
 	//exports.createdb = function(client, sqlDir, table, query, uniqueValue)
-	const playerDB = "playerdb";
+	const playerDB = "playersdb";
 	await sqlHand.createdb(client, `./SQL/${playerDB}.db3`, "data", config.sql_playerDBQuery,"id");
 
-	const guildDB = "guildDB";
+	const guildDB = "guildsDB";
 	await sqlHand.createdb(client, `./SQL/${guildDB}.db3`, "data", config.sql_guildQuery, "id");
+
+	//Check to make sure we haven't missed an entry while offline
+	let sqlChecks = require("./util/sqlCheck.js");
+	await sqlChecks.run(client);
 }
 
 async function dirCheck()
