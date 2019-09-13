@@ -1,0 +1,13 @@
+## Folders
+.node-persist/
+node_modules/
+SQL/
+
+## File extensions
+*.sqlite
+*.db3
+
+
+## Specific files
+package-lock.json
+config.json

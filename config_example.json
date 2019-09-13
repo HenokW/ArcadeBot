@@ -1,0 +1,11 @@
+{
+    "token": "DISCORD_API_TOKEN",
+    "rw_token": "RUSHWARS_API_TOKEN"
+    "default_prefix": "a."
+
+    "sql_guildQuery": "id INTEGER, tag TEXT",
+    "sql_guildSetterQuery": "INSERT or REPLACE INTO data(id, tag) VALUES (@id, @tag);",
+
+    "sql_playerDBQuery": "id INTEGER, prefix TEXT",
+    "sql_playerDBSetterQuery": "INSERT or REPLACE INTO data(id, prefix) VALUES (@id, @prefix);"
+}
