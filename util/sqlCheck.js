@@ -16,12 +16,12 @@ async function db_guildChecks(client)
     await sqlHand.createdb(client, dir, "data", config.sql_guildQuery, "id");
     for(let i = 0; i < guildsArr.length; i++)
     {
-        let guildInfo = await sqlHand.getData(client, "./SQL/guildsDB.db3", "data", "id", Number(guildsArr[i].id));
+        let guildInfo = await sqlHand.getData(client, "./SQL/guildsDB.db3", "data", "id", guildsArr[i].id);
         if(guildInfo == undefined)
         {
             count++;
             var data = {
-                id: Number(guildsArr[i].id),
+                id: guildsArr[i].id,
                 prefix: config.default_prefix
             }
 

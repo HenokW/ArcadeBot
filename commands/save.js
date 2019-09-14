@@ -18,9 +18,11 @@ module.exports.run = async function(client, message, args)
             tag: tag
         }
 
-        await sqlHand.setData(client, './SQL/playersdb.db3', config.sql_playerDBSetterQuery, "data", data);
+        await sqlHand.setData(client, './SQL/playersDB.db3', config.sql_playerDBSetterQuery, "data", data);
         return saveSuccess(client, message, requestData);
     }
+
+    return saveError(client, message, tag);
 }
 
 //0289PYLQGRJCUV
@@ -41,7 +43,7 @@ function saveSuccess(client, message, data)
 {
     const errImg = new Discord.Attachment('./resources/game_assets/ui_sprite_193.png', 'check.png');
     let msg = new Discord.RichEmbed()
-        .setColor("#8000ff")
+        .setColor(config.success_color)
         .attachFile(errImg)
         .setThumbnail('attachment://check.png')
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
@@ -55,9 +57,9 @@ function saveError(client, message, tag)
 {
     const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
     let msg = new Discord.RichEmbed()
-        .setColor("#f54245")
+        .setColor(config.error_color)
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
-        .addField("Invalid tag provided", "Please make sure you're entering your valid profile tag.\n\n" +
+        .addField("Invalid tag provided", "Please make sure you're entering your valid player tag.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
         .attachFile(errImg)

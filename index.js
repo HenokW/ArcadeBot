@@ -48,7 +48,7 @@ client.on("message", async message =>
 	if(message.channel.type === "dm") return;
 	if(message.author.bot) return;
 
-	let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'id', Number(message.guild.id));
+	let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'id', message.guild.id);
 
 	let args = message.content.slice(guildInfo.prefix.length).trim().split(' ');
 	let cmd = args.shift().toLowerCase();
@@ -73,7 +73,7 @@ async function startup()
 	await dirCheck();
 
 	//exports.createdb = function(client, sqlDir, table, query, uniqueValue)
-	const playerDB = "playersdb";
+	const playerDB = "playersDB";
 	await sqlHand.createdb(client, `./SQL/${playerDB}.db3`, "data", config.sql_playerDBQuery,"id");
 
 	const guildDB = "guildsDB";

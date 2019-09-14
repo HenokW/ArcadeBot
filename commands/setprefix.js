@@ -8,7 +8,7 @@ module.exports.run = async(client, message, args) =>
 	if(message.member.hasPermission("ADMINISTRATOR"))
 	{
 		//Increment the guild command usage count
-		let guildInfo = await sqlHand.getData(client, `./SQL/guildsDB.db3`, "data", "id", Number(message.guild.id));
+		let guildInfo = await sqlHand.getData(client, `./SQL/guildsDB.db3`, "data", "id", message.guild.id);
 
 		let newfix = args.shift();
 		if(newfix == guildInfo.prefix) return errMessage(message, "✖ Your current prefix matches your new prefix request.");

@@ -32,7 +32,6 @@ exports.getData = async function(client, sqlDir, table, identifier, index)
             resolve(returnData);
         }
         catch(e) {
-            console.log("HERE");
             client.emit("error", e);
             await db.close();
 
@@ -40,7 +39,7 @@ exports.getData = async function(client, sqlDir, table, identifier, index)
         }
     });
 
-    promise.then((data) => { return data });
+    promise.then((data) => { console.log(data) });
 }
 
 /*
