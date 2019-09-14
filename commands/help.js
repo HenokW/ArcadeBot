@@ -21,8 +21,8 @@ module.exports.run = async function(client, message, args)
 
         .addBlankField()
         .addField("Dev", `<:twitter:528807292305408030> [Henok](https://twitter.com/stupidsedits)`, true)
-        .addField("Invite me", `<:discord:528808847671033867> [Invite](https://discordapp.com/oauth2/authorize?client_id=621824033855504395&scope=bot&permissions=322624)`, true)
-        .addField("Feel like donating", "<:pplogo384:539150609593532417> [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EQD8GU6SS6324&currency_code=USD&source=url)", true)
+        .addField("Invite me", `<:discord:528808847671033867> [Invite](${config.invite_link})`, true)
+        .addField("Support Server", `<:discord:528808847671033867> [Join Us](${config.server_link})`, true)
         .setTimestamp()
         .setFooter(`${client.user.username}#${client.user.discriminator}`, client.user.displayAvatarURL);
 

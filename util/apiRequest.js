@@ -46,8 +46,19 @@ module.exports.request = async function(client, message, options)
             {
                 // switch(err.status)
                 reject(undefined);
-                console.error(err);
+                client.emit("error", err);
             });
         }
     });
+}
+
+function reqError(message)
+{
+    let msg = new Discord.RichEmbed()
+        .setColor(config.error_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setTitle("Uh-oh, something happened!")
+        .setDescription("Please feel free to try this command again. if this issue persist, then chances are the issue is on our end! If this is the case, please try again later, or join our support server to let us know.");
+
+    return message.channel.send({embed:msg});
 }
