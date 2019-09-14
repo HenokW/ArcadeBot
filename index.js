@@ -37,6 +37,10 @@ client.on("ready", async () =>
 client.on("guildCreate", async guild =>
 {
 	console.log("I've been connected to a new guild:\n" + guild.name + "\n" + guild.id);
+
+	//Check to make sure we haven't missed an entry while offline
+	let sqlChecks = require("./util/sqlCheck.js");
+	await sqlChecks.run(client);
 });
 
 client.on("error", (e) => console.error(e));

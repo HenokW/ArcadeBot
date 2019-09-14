@@ -44,9 +44,10 @@ module.exports.request = async function(client, message, options)
             })
             .catch(err =>
             {
+                // switch(err.status)
                 reject(undefined);
-                //console.error(err.response.status);
-            })
+                console.error(err);
+            });
         }
     });
 }

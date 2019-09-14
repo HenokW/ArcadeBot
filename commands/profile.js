@@ -79,28 +79,28 @@ function sendProfileMessage(client, message, data)
     //Getting available cards
     //---------
     let defenseText = "";
-    let myDefenses = data.defenses;
+    let myDefenses = data.defenses || [];
     for(let i = 0; i < myDefenses.length; i++) {
         if(!util.id_to_emote[myDefenses[i].scId]) defenseText += util.id_to_emote["0"]; //Unknown emote
         else defenseText += util.id_to_emote[myDefenses[i].scId];
     }
 
     let abilityText = "";
-    let myAbilities = data.airdrops;
+    let myAbilities = data.airdrops || [];
     for(let i = 0; i < myAbilities.length; i++) {
         if(!util.id_to_emote[myAbilities[i].scId]) abilityText += util.id_to_emote["0"]; //Unknown emote
         else abilityText += util.id_to_emote[myAbilities[i].scId];
     }
 
     let troopText = "";
-    let myTroops = data.troops;
+    let myTroops = data.troops || [];
     for(let i = 0; i < myTroops.length; i++) {
         if(!util.id_to_emote[myTroops[i].scId]) troopText += util.id_to_emote["0"]; //Unknown emote
         else troopText += util.id_to_emote[myTroops[i].scId];
     }
 
     let commanderText = "";
-    let myCommanders = data.commanders;
+    let myCommanders = data.commanders || [];
     for(let i = 0; i < myCommanders.length; i++) {
         if(!util.id_to_emote[myCommanders[i].scId]) commanderText += util.id_to_emote["0"]; //Unknown emote
         else commanderText += util.id_to_emote[myCommanders[i].scId];
