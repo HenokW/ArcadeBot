@@ -46,6 +46,26 @@ module.exports.sendErrorMessage = function(message, content, type)
     }
 }
 
+module.exports.getLeagueMedal = function(starNum)
+{
+    //Grabbing current league medal
+    let star = "<:rw_league_0:622260074215374850>";
+
+    if(starNum >= 10000) star = "<:rw_league_12:622262584837537792>";
+    else if(starNum >= 8000) star = "<:rw_league_11:622260103839481866>";
+    else if(starNum >= 6500) star = "<:rw_league_10:622260104342929413>";
+    else if(starNum >= 5200) star = "<:rw_league_9:622260102669533196>";
+    else if(starNum >= 4000) star = "<:rw_league_8:622260100567924747>";
+    else if(starNum >= 3000) star = "<:rw_league_7:622260098814836736>";
+    else if(starNum >= 2400) star = "<:rw_league_6:622260096432603223>";
+    else if(starNum >= 1800) star = "<:rw_league_5:622260095996395540>";
+    else if(starNum >= 1200) star = "<:rw_league_4:622260097048903720>";
+    else if(starNum >= 600) star = "<:rw_league_3:622260093253058600>";
+    else if(starNum >= 200) star = "<:rw_league_2:622260097426391040>";
+    else if(starNum >= 10) star = "<:rw_league_1:622260095266324510>";
+
+    return star;
+}
 
 module.exports.id_to_emote = {
     //Abilities
