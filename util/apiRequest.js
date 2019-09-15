@@ -60,5 +60,5 @@ function reqError(message)
         .setTitle("Uh-oh, something happened!")
         .setDescription("Please feel free to try this command again. if this issue persist, then chances are the issue is on our end! If this is the case, please try again later, or join our support server to let us know.");
 
-    return message.channel.send({embed:msg});
+    return message.channel.send({embed:msg}).catch(err => {});
 }

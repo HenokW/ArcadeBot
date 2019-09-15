@@ -8,5 +8,5 @@ module.exports.run = async function(client, message, args)
         .setTitle("Let me join!")
         .setDescription(config.invite_link);
 
-    message.channel.send({embed:msg});
+    message.channel.send({embed:msg}).catch(err => {});
 }

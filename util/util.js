@@ -13,7 +13,7 @@ module.exports.missingTagError = function(client, message)
         .attachFile(errImg)
         .setImage('attachment://errorImg.png');
 
-        return message.reply({embed:msg});
+        return message.reply({embed:msg}).catch(err => {});
 }
 
 module.exports.timeInMS = function() {
@@ -33,13 +33,13 @@ module.exports.sendErrorMessage = function(message, content, type)
     switch(type)
     {
         case "REPLY":
-            message.reply({embed:prefixMessage});
+            message.reply({embed:prefixMessage}).catch(err => {});
             break;
         case "CHANNEL":
-            message.channel.send({embed:prefixMessage});
+            message.channel.send({embed:prefixMessage}).catch(err => {});
             break;
         case "DM":
-            message.author.send({embed:prefixMessage});
+            message.author.send({embed:prefixMessage}).catch(err => {});
             break;
         default:
             throw new Error("Invalid type given. Available types are: 'REPLY', 'CHANNEL', and 'DM'.");

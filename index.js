@@ -59,7 +59,7 @@ client.on("message", async message =>
 
 	//If they happened to ping the bot
 	if(message.content == (client.user))
-		return message.channel.send("For further help, please feel free to use **`" + guildInfo.prefix + "help`** for a complete rundown of all my commands.\n\n**Guild prefix:** `" + guildInfo.prefix + "`");
+		return message.channel.send("For further help, please feel free to use **`" + guildInfo.prefix + "help`** for a complete rundown of all my commands.\n\n**Guild prefix:** `" + guildInfo.prefix + "`").catch(err => {});
 
 	//Not their prefix, RUN AWAY!
 	if(!message.content.startsWith(guildInfo.prefix)) return;

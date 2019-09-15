@@ -49,7 +49,7 @@ function saveSuccess(client, message, data)
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
         .setTitle(`Successfully saved | ${data.name} #${data.tag}`);
 
-    message.reply({embed:msg});
+    message.reply({embed:msg}).catch(err => {});
     message.channel.stopTyping();
 }
 

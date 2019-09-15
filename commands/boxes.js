@@ -82,7 +82,7 @@ function sendBoxCycle(message, data, cycle, cycle2)
         .attachFile(boxImg)
         .setThumbnail('attachment://box.png');
 
-    message.reply({embed:msg});
+    message.reply({embed:msg}).catch(err => {});
 }
 
 function getRandomBox()

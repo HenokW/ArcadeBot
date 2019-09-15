@@ -60,5 +60,5 @@ async function sendTeamMessage(client, message, data)
         .addField("Top Members", scoreLB, true);
 
 
-    message.reply({embed:msg});
+    message.reply({embed:msg}).catch(err => {});
 }

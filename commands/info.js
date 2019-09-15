@@ -27,5 +27,5 @@ module.exports.run = function(client, message, args)
         .setFooter("Powered by Zihad & 4JR's RushWars API", "attachment://star_icon.png");
 
     message.channel.stopTyping();
-    message.channel.send({embed:msg});
+    message.channel.send({embed:msg}).catch(err => {});
 }

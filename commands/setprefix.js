@@ -20,7 +20,7 @@ module.exports.run = async(client, message, args) =>
 			.setColor("#be243e")
 			.setDescription("Your server's prefix has successfully been set to: **`" + newfix + "`**\n\n**Guild:** `" + message.guild.name + "`\n**Changed by:**" + message.author);
 
-		message.reply({embed:prefixMessage});
+		message.reply({embed:prefixMessage}).catch(err => {});
 	}
 	else
 		util.sendErrorMessage(message, "You must be a server administrator to use this command.", "REPLY");

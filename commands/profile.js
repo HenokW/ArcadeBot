@@ -144,5 +144,5 @@ function sendProfileMessage(client, message, data)
         .addField(`Defenses Unlocked`, `${defenseText} **\`${myDefenses.length}/${defenseCount}\`**`, false)
         .setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
 
-    message.reply({embed:msg});
+    message.reply({embed:msg}).catch(err => {});
 }

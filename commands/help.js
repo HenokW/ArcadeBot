@@ -27,5 +27,5 @@ module.exports.run = async function(client, message, args)
         .setFooter(`${client.user.username}#${client.user.discriminator}`, client.user.displayAvatarURL);
 
     message.channel.stopTyping();
-    message.reply({embed:helpMsg});
+    message.reply({embed:helpMsg}).catch(err => {});
 }
