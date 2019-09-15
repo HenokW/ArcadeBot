@@ -16,6 +16,7 @@ module.exports.run = async function(client, message, args)
     }
 
     let userRequestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
+    if(!userRequestData.team) return util.sendErrorMessage(message, "You don't seem to be apart of a team! Please join a team to use this command.", "REPLY");
     let requestData = await apiReq.request(client, message, {endpoint: "team/", tag: userRequestData.team.tag});
 
     message.channel.stopTyping();

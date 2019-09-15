@@ -61,7 +61,7 @@ function saveError(client, message, tag)
     let msg = new Discord.RichEmbed()
         .setColor(config.error_color)
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
-        .addField("Invalid tag provided", "Please make sure you're entering your valid player tag.\n\n" +
+        .addField("Invalid tag provided", "Please make sure you're entering your valid player tag by using the **`save #TAG`** command. You can find your tag in-game in your player profile.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
         .attachFile(errImg)

@@ -1,5 +1,5 @@
-const config = require("../config.json");
 const sqlHand = require("./sql_handler.js");
+const config = require("../config.json");
 const Discord = require("discord.js");
 
 module.exports.missingTagError = function(client, message)
@@ -26,8 +26,10 @@ module.exports.timeInS = function() {
 
 module.exports.sendErrorMessage = function(message, content, type)
 {
+    //.setColor("#303030")
     const prefixMessage = new Discord.RichEmbed()
-		.setColor("#303030")
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+		.setColor(config.error_color)
 		.setDescription(`✖ ${content}`);
 
     switch(type)

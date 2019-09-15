@@ -131,10 +131,14 @@ function sendProfileMessage(client, message, data)
         .addField("Defenses Lost", `<:rw_shield_dam:622260068985077779> ${data.variables.totalDefensesLost}`, true)
 
         .addField("Gold Looted", `<:rw_gold:622260066271363072> ${data.variables.totalGoldLooted}`, true)
-        .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated}`, true)
+        .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated}`, true);
 
-        .addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | ${data.team.tag}`, true)
-        .addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened}`, true)
+        if(data.team) msg.addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | ${data.team.tag}`, true);
+        else {
+            msg.addField("Team", `<:rw_0:622319032221040650> Not a member`, true);
+        }
+
+        msg.addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened}`, true)
         .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${data.variables.obstaclesRemoved}`, true)
 
         .addBlankField()
