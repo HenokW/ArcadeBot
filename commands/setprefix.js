@@ -11,10 +11,10 @@ module.exports.run = async(client, message, args) =>
 		let guildInfo = await sqlHand.getData(client, `./SQL/guildsDB.db3`, "data", "id", message.guild.id);
 
 		let newfix = args.shift();
-		if(newfix == guildInfo.prefix) return errMessage(message, "✖ Your current prefix matches your new prefix request.");
+		if(newfix == guildInfo.prefix) return util.sendErrorMessage(message, "Your current prefix matches your new prefix request.", "REPLY");
 
 		guildInfo.prefix = newfix;
-		sqlHand.setData(client, `./SQL/guildsDB.db3`, config.sql_guildSetterQuery, guildInfo);
+		await sqlHand.setData(client, `./SQL/guildsDB.db3`, config.sql_guildSetterQuery, "data", guildInfo);
 
 		const prefixMessage = new Discord.RichEmbed()
 			.setColor("#be243e")

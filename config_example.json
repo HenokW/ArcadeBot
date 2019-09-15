@@ -8,7 +8,7 @@
     "error_color": "#f54245",
     "success_color": "#8000ff",
 
-    "sql_guildQuery": "id INTEGER, prefix TEXT",
+    "sql_guildQuery": "id TEXT, prefix TEXT",
     "sql_guildSetterQuery": "INSERT or REPLACE INTO data(id, prefix) VALUES (@id, @prefix);",
 
     "sql_playerDBQuery": "id INTEGER, tag TEXT",
