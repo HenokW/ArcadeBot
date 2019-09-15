@@ -37,6 +37,14 @@ client.on("ready", async () =>
 client.on("guildCreate", async guild =>
 {
 	console.log("I've been connected to a new guild:\n" + guild.name + "\n" + guild.id);
+	var joinMsg = new Discord.RichEmbed()
+		.setColor("#FFFFFF")
+		.setTitle("New guild connected")
+		.setDescription(`**Guild Name:** **\`${guild.name}\`**\n` +
+						`**Guild ID:** **\`${guild.id}\`**\n` +
+						`**Member Count:** **\`${guild.members.array().length}\`**`);
+	if(guild.iconURL) joinMsg.setThumbnail(guild.iconURL);
+	client.emit("log", joinMsg)
 
 	//Check to make sure we haven't missed an entry while offline
 	let sqlChecks = require("./util/sqlCheck.js");
@@ -45,6 +53,10 @@ client.on("guildCreate", async guild =>
 
 client.on("error", (e) => console.error(e));
 client.on("warn", (e) => console.warn(e));
+client.on("log", async (e) => {
+	var logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929');
+	logChan.send({embed:e});
+});
 // client.on("debug", (e) => console.info(e));
 
 client.on("message", async message =>

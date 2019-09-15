@@ -7,6 +7,8 @@ module.exports.run = async function(client, message, args)
 {
     message.channel.startTyping();
 
+    if(!args[0]) return saveError(client, message);
+
     let tag = tagCheck(args.shift());
     if(!tag) return saveError(client, message, tag);
 
