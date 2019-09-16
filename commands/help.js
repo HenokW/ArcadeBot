@@ -15,6 +15,8 @@ module.exports.run = async function(client, message, args)
         ` **\`${prefix}profile\`** - Shows your in-game profile stats.\n` +
         ` **\`${prefix}save\`** - Links your in-game profile to your account.\n` +
         ` **\`${prefix}boxes\`** - Shows your upcoming box cycles.\n`+
+        ` **\`${prefix}levels\`** - Shows your card levels.\n`+
+        ` **\`${prefix}activity\`** - Shows your team's recent activity.\n`+
         ` **\`${prefix}team\`** - Shows your team's info.\n\n** **`)
 
         .addField("Server Commands",

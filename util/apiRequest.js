@@ -45,7 +45,7 @@ module.exports.request = async function(client, message, options)
             .catch(err =>
             {
                 // switch(err.status)
-                reject(undefined);
+                reject(reqError(message));
                 client.emit("error", err);
             });
         }
@@ -60,5 +60,6 @@ function reqError(message)
         .setTitle("Uh-oh, something happened!")
         .setDescription("Please feel free to try this command again. if this issue persist, then chances are the issue is on our end! If this is the case, please try again later, or join our support server to let us know.");
 
+    message.channel.stopTyping();
     return message.channel.send({embed:msg}).catch(err => {});
 }

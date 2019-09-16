@@ -46,6 +46,8 @@ module.exports.sendErrorMessage = function(message, content, type)
         default:
             throw new Error("Invalid type given. Available types are: 'REPLY', 'CHANNEL', and 'DM'.");
     }
+
+    message.channel.stopTyping();
 }
 
 module.exports.getLeagueMedal = function(starNum)
