@@ -81,38 +81,38 @@ function sendProfileMessage(client, message, data)
     let defenseText = "";
     let myDefenses = data.defenses || [];
     for(let i = 0; i < myDefenses.length; i++) {
-        if(!util.id_to_emote[myDefenses[i].scId]) defenseText += util.id_to_emote["0"]; //Unknown emote
-        else defenseText += util.id_to_emote[myDefenses[i].scId];
+        if(!util.id_to_emote[myDefenses[i].scId]) defenseText += `${util.id_to_emote["0"]}  `; //Unknown emote
+        else defenseText += `${util.id_to_emote[myDefenses[i].scId]}  `;
     }
 
     let abilityText = "";
     let myAbilities = data.airdrops || [];
     for(let i = 0; i < myAbilities.length; i++) {
-        if(!util.id_to_emote[myAbilities[i].scId]) abilityText += util.id_to_emote["0"]; //Unknown emote
-        else abilityText += util.id_to_emote[myAbilities[i].scId];
+        if(!util.id_to_emote[myAbilities[i].scId]) abilityText += `${util.id_to_emote["0"]}  `; //Unknown emote
+        else abilityText += `${util.id_to_emote[myAbilities[i].scId]}  `;
     }
 
     let troopText = "";
     let myTroops = data.troops || [];
     for(let i = 0; i < myTroops.length; i++) {
-        if(!util.id_to_emote[myTroops[i].scId]) troopText += util.id_to_emote["0"]; //Unknown emote
-        else troopText += util.id_to_emote[myTroops[i].scId];
+        if(!util.id_to_emote[myTroops[i].scId]) troopText += `${util.id_to_emote["0"]}  `; //Unknown emote
+        else troopText += `${util.id_to_emote[myTroops[i].scId]}  `;
     }
 
     let commanderText = "";
     let myCommanders = data.commanders || [];
     for(let i = 0; i < myCommanders.length; i++) {
-        if(!util.id_to_emote[myCommanders[i].scId]) commanderText += util.id_to_emote["0"]; //Unknown emote
-        else commanderText += util.id_to_emote[myCommanders[i].scId];
+        if(!util.id_to_emote[myCommanders[i].scId]) commanderText += `${util.id_to_emote["0"]}  `; //Unknown emote
+        else commanderText += `${util.id_to_emote[myCommanders[i].scId]}  `;
     }
     //-----------
 
-    const greenTimer = new Discord.Attachment('./resources/game_assets/green_timer.png', 'green_timer.png');
+    //const greenTimer = new Discord.Attachment('./resources/game_assets/green_timer.png', 'green_timer.png');
     const leagueIcon = new Discord.Attachment(leagueImgs[star], 'league_icon.png');
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
         .setAuthor(`${data.name} #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
-        .attachFiles([leagueIcon, greenTimer])
+        .attachFiles([leagueIcon])
         .setThumbnail('attachment://league_icon.png')
         .addField("Current Stars", `${star} ${data.stars}`, true)
         .addField("Lifetime Stars", `<:rw_gold_star:622260094775853066> ${data.variables.attackStars + data.variables.defenseStars}`, true)
@@ -146,7 +146,7 @@ function sendProfileMessage(client, message, data)
         .addField(`Troops Unlocked`, `${troopText} **\`${myTroops.length}/${troopCount}\`**`, false)
         .addField(`Abilities Unlocked`, `${abilityText} **\`${myAbilities.length}/${abilityCount}\`**`, false)
         .addField(`Defenses Unlocked`, `${defenseText} **\`${myDefenses.length}/${defenseCount}\`**`, false)
-        .setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
+        //.setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
 
     message.reply({embed:msg}).catch(err => {});
 }

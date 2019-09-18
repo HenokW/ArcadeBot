@@ -6,9 +6,12 @@ const Discord = require("discord.js");
 
 const teamLimit = 25;
 const allowed_roles = ["Leader", "Co-Leader"];
+const allowed_users = ['148278118170361857'];
 
 module.exports.run = async function(client, message, args)
 {
+    if(!allowed_users.includes(message.author.id)) return;
+
     message.channel.startTyping();
 
     let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
