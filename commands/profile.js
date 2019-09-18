@@ -120,8 +120,8 @@ function sendProfileMessage(client, message, data)
         .addField(`HQ Level`, `${hqEmojis[data.variables.hqLevel]} ${data.variables.hqLevel}`, true)
         .addField("Chopper Level", `<:rw_chopper:622268961077198869> ${data.variables.chopperLevel}`, true)
 
-        .addField("Domination Attacks", `<:rw_troops:622260065499349032> ${data.variables.totalDominationAttacks}`, true)
-        .addField("Domination Stars", `<:rw_gold_star:622260094775853066> ${data.variables.dominationStars}`, true)
+        .addField("Domination Attacks", `<:rw_troops:622260065499349032> ${data.variables.totalDominationAttacks || 0}`, true)
+        .addField("Domination Stars", `<:rw_gold_star:622260094775853066> ${data.variables.dominationStars || 0}`, true)
 
         .addField("Total Attacks", `<:rw_bullets:622260067013492737> ${data.variables.totalAttacks}`, true)
         .addField("Attacks Won", `<:rw_gun:622260073724641291> ${data.variables.totalAttacksWon}`, true)

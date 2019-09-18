@@ -36,7 +36,7 @@ client.on("ready", async () =>
 
 client.on("guildCreate", async guild =>
 {
-	console.log("I've been connected to a new guild:\n" + guild.name + "\n" + guild.id);
+	console.log("I've been connected to a new guild:\n" + guild.name + "\n" + guild.id + '\n');
 	var joinMsg = new Discord.RichEmbed()
 		.setColor("#FFFFFF")
 		.setTitle("New guild connected")
@@ -51,7 +51,31 @@ client.on("guildCreate", async guild =>
 	await sqlChecks.run(client);
 });
 
-client.on("error", (e) => console.error(e));
+client.on("guildDelete", async guild =>
+{
+	console.log("I've been disconnected from guild:\n" + guild.name + "\n" + guild.id + '\n');
+	var leaveMsg = new Discord.RichEmbed()
+		.setColor("#ff0000")
+		.setTitle("Removed from a guild")
+		.setDescription(`**Guild Name:** **\`${guild.name}\`**\n` +
+						`**Guild ID:** **\`${guild.id}\`**\n` +
+						`**Member Count:** **\`${guild.members.array().length}\`**`);
+	if(guild.iconURL) leaveMsg.setThumbnail(guild.iconURL);
+	client.emit("log", leaveMsg)
+});
+
+client.on("error", (e) => {
+	console.error(e);
+	if(e.length > 1024) e = e.substring(0, 1023);
+
+	let msg = new Discord.RichEmbed()
+		.setColor("#ff0000")
+		.setTitle("New Error")
+		.setDescription(e);
+
+	client.emit("log", msg);
+});
+
 client.on("warn", (e) => console.warn(e));
 client.on("log", async (e) => {
 	var logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929');
