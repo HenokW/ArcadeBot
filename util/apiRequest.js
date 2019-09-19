@@ -2,6 +2,8 @@ const config = require("../config.json");
 const Discord = require("discord.js");
 const axios = require("axios");
 
+const RETRY_LIMIT = 3; //How many times we should retry a failed request before returning an error
+const TIMEOUT_DURATION = 3000; //Time in ms
 const API_URL = "https://api.rushstats.com/v1/";
 let request = axios.create(
     {
@@ -16,6 +18,7 @@ module.exports.request = async function(client, message, options)
     let endpoint = (options.endpoint || undefined);
     let tag = (options.tag || undefined);
     let query = (options.query || undefined);
+    let triedCount = options.triedCount || (options.triedCount = 0 && 0);
 
     if(!endpoint) throw new Error("Object missing a specified endpoint. Please provide an endpoint using the 'endpoint' variable.");
     if(!query && endpoint == "search/") throw new Error("Object missing a specified search query. Please Please provide an endpoint using the 'query' variable.");
@@ -34,7 +37,8 @@ module.exports.request = async function(client, message, options)
     {
         if(endpoint != "search/")
         {
-            request.get(`${API_URL}${endpoint}${tag}`)
+            // setTimeout(function(){ reject(reqError(message)); }, 5000);
+            request.get(`${API_URL}${endpoint}${tag}`, {timeout: TIMEOUT_DURATION})
             .then(res =>
             {
                 if(res.status == 200)
@@ -44,9 +48,17 @@ module.exports.request = async function(client, message, options)
             })
             .catch(err =>
             {
-                // switch(err.status)
-                reject(reqError(message));
-                client.emit("error", err);
+                if(triedCount >= RETRY_LIMIT)
+                {
+                    console.log(options.triedCount);
+                    reject(reqError(message));
+                    client.emit("error", err);
+                }
+                else {
+                    options.triedCount++;
+                    console.log(options.triedCount);
+                    module.exports.request(client, message, options);
+                }
             });
         }
     });
@@ -58,7 +70,7 @@ function reqError(message)
         .setColor(config.error_color)
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
         .setTitle("Uh-oh, something happened!")
-        .setDescription("Please feel free to try this command again. if this issue persist, then chances are the issue is on our end! If this is the case, please try again later, or join our support server to let us know.");
+        .setDescription("Please feel free to try this command again. if this issue persists, and the game isn't currently under maintenance, or hasn't recently came out of maintenance, then chances are the issue is on our end!\n\nIf this is the case, please try again later, or join our support server to let us know.");
 
     message.channel.stopTyping();
     return message.channel.send({embed:msg}).catch(err => {});

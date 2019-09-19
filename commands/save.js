@@ -9,7 +9,7 @@ module.exports.run = async function(client, message, args)
 
     if(!args[0]) return saveError(client, message);
 
-    let tag = tagCheck(args.shift());
+    let tag = util.tagCheck(args.shift());
     if(!tag) return saveError(client, message, tag);
 
     let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: tag});
@@ -25,20 +25,6 @@ module.exports.run = async function(client, message, args)
     }
 
     return saveError(client, message, tag);
-}
-
-//0289PYLQGRJCUV
-function tagCheck(tag)
-{
-    const validChars = ['0', '2', '8', '9', 'P', 'Y', 'L', 'Q', 'G', 'R', 'J', 'C', 'U', 'V'];
-
-    if(tag[0] == "#") tag = tag.substring(1, tag.length);
-    tag = tag.toUpperCase();
-
-    for(let i = 0; i < tag.length; i++)
-        if(!validChars.includes(tag[i])) return false;
-
-    return tag;
 }
 
 function saveSuccess(client, message, data)

@@ -8,19 +8,58 @@ const teamLimit = 25;
 module.exports.run = async function(client, message, args)
 {
     message.channel.startTyping();
-    let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
-    if(!userData || !userData.tag)
+
+    if(!args[0])
     {
+        let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
+        if(!userData || !userData.tag)
+        {
+            message.channel.stopTyping();
+            return util.missingTagError(client, message);
+        }
+
+        let userRequestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
+        if(!userRequestData.team) return util.sendErrorMessage(message, "You don't seem to be apart of a team! Please join a team to use this command.", "REPLY");
+        let requestData = await apiReq.request(client, message, {endpoint: "team/", tag: userRequestData.team.tag});
+
         message.channel.stopTyping();
-        return util.missingTagError(client, message);
+        sendTeamMessage(client, message, requestData);
     }
+    else
+    {
+        if(message.mentions.users.first())
+        {
+            let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.mentions.users.first().id);
+            if(!userData || !userData.tag)
+            {
+                message.channel.stopTyping();
+                return util.missingTagError(client, message, true);
+            }
 
-    let userRequestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
-    if(!userRequestData.team) return util.sendErrorMessage(message, "You don't seem to be apart of a team! Please join a team to use this command.", "REPLY");
-    let requestData = await apiReq.request(client, message, {endpoint: "team/", tag: userRequestData.team.tag});
+            let userRequestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
+            if(!userRequestData.team) return util.sendErrorMessage(message, "This user doesn't seem to be apart of a team! They must be in a team to use this command.", "REPLY");
+            let requestData = await apiReq.request(client, message, {endpoint: "team/", tag: userRequestData.team.tag});
 
-    message.channel.stopTyping();
-    sendTeamMessage(client, message, requestData);
+            message.channel.stopTyping();
+            sendTeamMessage(client, message, requestData);
+        }
+        else
+        {
+            let tag = util.tagCheck(args.shift());
+            if(!tag) return saveError(client, message, tag);
+
+            let requestData = await apiReq.request(client, message, {endpoint: "team/", tag: tag});
+            if(requestData)
+            {
+                message.channel.stopTyping();
+                sendTeamMessage(client, message, requestData);
+            }
+            else {
+                message.channel.stopTyping();
+                return util.sendErrorMessage(message, "Invalid team tag provided. Please ensure you're entering a valid team tag.", "REPLY");
+            }
+        }
+    }
 }
 
 async function sendTeamMessage(client, message, data)
@@ -44,7 +83,7 @@ async function sendTeamMessage(client, message, data)
         }
     let temp = "";
     for(let i = 0; i < scoreLB.length; i++)
-        temp += `**\`${i + 1}.)\`** ${util.getLeagueMedal(scoreLB[i].stars)} ${scoreLB[i].name} **\`${scoreLB[i].stars}\`**\n`;
+        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${scoreLB[i].name}\n`;
     scoreLB = temp;
     //--------------
 
@@ -62,4 +101,17 @@ async function sendTeamMessage(client, message, data)
 
 
     message.reply({embed:msg}).catch(err => {});
+}
+
+function saveError(client, message, tag)
+{
+    let msg = new Discord.RichEmbed()
+        .setColor(config.error_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .addField("Invalid tag provided", "Please make sure you're entering a valid team tag.\n\n" +
+            "**Valid Numbers:** `0, 2, 8, 9`\n" +
+            "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`");
+
+    message.reply({embed:msg}).catch(error => { client.emit("error", error) });
+    message.channel.stopTyping();
 }

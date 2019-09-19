@@ -11,6 +11,7 @@ module.exports.run = async(client, message, args) =>
 		let guildInfo = await sqlHand.getData(client, `./SQL/guildsDB.db3`, "data", "id", message.guild.id);
 
 		let newfix = args.shift();
+		if(!newfix) return util.sendErrorMessage(message, "You cannot set an empty prefix.", "REPLY");
 		if(newfix == guildInfo.prefix) return util.sendErrorMessage(message, "Your current prefix matches your new prefix request.", "REPLY");
 
 		guildInfo.prefix = newfix;

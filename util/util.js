@@ -2,7 +2,22 @@ const sqlHand = require("./sql_handler.js");
 const config = require("../config.json");
 const Discord = require("discord.js");
 
-module.exports.missingTagError = function(client, message)
+module.exports.tagCheck = function(tag)
+{
+    const validChars = ['0', '2', '8', '9', 'P', 'Y', 'L', 'Q', 'G', 'R', 'J', 'C', 'U', 'V'];
+
+    if(tag[0] == "#") tag = tag.substring(1, tag.length);
+    if(tag.length < 3) return false;
+
+    tag = tag.toUpperCase();
+
+    for(let i = 0; i < tag.length; i++)
+        if(!validChars.includes(tag[i])) return false;
+
+    return tag;
+}
+
+module.exports.missingTagError = function(client, message, searched)
 {
     const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
     let msg = new Discord.RichEmbed()
@@ -12,6 +27,9 @@ module.exports.missingTagError = function(client, message)
         .setDescription("To save your tag, please use the **`save #TAG`** command. You can find your tag in-game in your player profile.")
         .attachFile(errImg)
         .setImage('attachment://errorImg.png');
+
+    if(searched)
+        msg.setTitle("That user doesn't have a tag saved");
 
         return message.reply({embed:msg}).catch(err => {});
 }

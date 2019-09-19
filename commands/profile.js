@@ -42,17 +42,48 @@ const troopCount = 17;
 module.exports.run = async function(client, message, args)
 {
     message.channel.startTyping();
-    let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
-    if(!userData || !userData.tag)
+
+    if(!args[0])
     {
+        let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
+        if(!userData || !userData.tag)
+        {
+            message.channel.stopTyping();
+            return util.missingTagError(client, message);
+        }
+
+        let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
+
         message.channel.stopTyping();
-        return util.missingTagError(client, message);
+        sendProfileMessage(client, message, requestData);
     }
+    else
+    {
+        if(message.mentions.users.first())
+        {
+            let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.mentions.users.first().id);
+            if(!userData || !userData.tag)
+            {
+                message.channel.stopTyping();
+                return util.missingTagError(client, message, true);
+            }
 
-    let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
+            let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
 
-    message.channel.stopTyping();
-    sendProfileMessage(client, message, requestData);
+            message.channel.stopTyping();
+            sendProfileMessage(client, message, requestData);
+        }
+        else
+        {
+            let tag = util.tagCheck(args.shift());
+            if(!tag) return saveError(client, message, tag);
+
+            let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: tag});
+
+            message.channel.stopTyping();
+            sendProfileMessage(client, message, requestData);
+        }
+    }
 }
 
 function sendProfileMessage(client, message, data)
@@ -121,25 +152,27 @@ function sendProfileMessage(client, message, data)
         .addField("Chopper Level", `<:rw_chopper:622268961077198869> ${data.variables.chopperLevel}`, true)
 
         .addField("Domination Attacks", `<:rw_troops:622260065499349032> ${data.variables.totalDominationAttacks || 0}`, true)
-        .addField("Domination Stars", `<:rw_gold_star:622260094775853066> ${data.variables.dominationStars || 0}`, true)
+        .addField("Domination Stars", `<:rw_white_star:622579023364751361> ${data.variables.dominationStars || 0}`, true)
 
+        .addField("Attack Stars", `<:rw_attack_stars:624046529937801283>  ${data.variables.attackStars || 0}`, true)
+        .addField("Defense Stars", `<:rw_defense_stars:624046530881519616>  ${data.variables.defenseStars || 0}`, true)
         .addField("Total Attacks", `<:rw_bullets:622260067013492737> ${data.variables.totalAttacks}`, true)
         .addField("Attacks Won", `<:rw_gun:622260073724641291> ${data.variables.totalAttacksWon}`, true)
         .addField("Attacks Lost", `<:rw_empty_star:622260080850632724> ${data.variables.totalAttacksLost}`, true)
         .addField("Total Defenses", `<:rw_tri_shields:622260073963454479> ${data.variables.totalDefensesWon + data.variables.totalDefensesLost}`, true)
-        .addField("Defenses Won", `<:rw_shield:622260063867895848> ${data.variables.totalDefensesWon}`, true)
-        .addField("Defenses Lost", `<:rw_shield_dam:622260068985077779> ${data.variables.totalDefensesLost}`, true)
+        .addField("Defenses Won", `<:rw_defenses_won:624055275728535563> ${data.variables.totalDefensesWon}`, true)
+        .addField("Defenses Lost", `<:rw_defenses_lost:624055094710763541> ${data.variables.totalDefensesLost}`, true)
 
         .addField("Gold Looted", `<:rw_gold:622260066271363072> ${data.variables.totalGoldLooted}`, true)
         .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated}`, true);
 
         if(data.team) msg.addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | ${data.team.tag}`, true);
         else {
-            msg.addField("Team", `<:rw_0:622319032221040650> Not a member`, true);
+            msg.addField("Team", `<:rw_noclan:624042525862395905> Not a member`, true);
         }
 
-        msg.addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened}`, true)
-        .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${data.variables.obstaclesRemoved}`, true)
+        msg.addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened || 0}`, true)
+        .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${data.variables.obstaclesRemoved || 0}`, true)
 
         .addBlankField()
         .addField(`Commanders Unlocked`, `${commanderText} **\`${myCommanders.length}/${commanderCount}\`**`, false)
@@ -149,4 +182,20 @@ function sendProfileMessage(client, message, data)
         //.setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
 
     message.reply({embed:msg}).catch(err => {});
+}
+
+function saveError(client, message, tag)
+{
+    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.RichEmbed()
+        .setColor(config.error_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .addField("Invalid tag provided", "Please make sure you're entering a valid player tag. You can find your tag in-game in your player profile.\n\n" +
+            "**Valid Numbers:** `0, 2, 8, 9`\n" +
+            "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
+        .attachFile(errImg)
+        .setImage('attachment://errorImg.png');
+
+    message.reply({embed:msg}).catch(error => { client.emit("error", error) });
+    message.channel.stopTyping();
 }
