@@ -1,6 +1,7 @@
 const sqlHand = require("../util/sql_handler.js");
 const apiReq = require("../util/apiRequest.js");
 const config = require("../config.json");
+const util = require("../util/util.js");
 const Discord = require("discord.js");
 
 module.exports.run = async function(client, message, args)
