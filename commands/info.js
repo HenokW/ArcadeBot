@@ -1,7 +1,7 @@
 const sqlHand = require("../util/sql_handler.js");
 const config = require("../config.json");
+const util = require("../util/util.js");
 const Discord = require("discord.js");
-const timeUtil = require("hh-mm-ss");
 
 module.exports.run = function(client, message, args)
 {
@@ -20,7 +20,7 @@ module.exports.run = function(client, message, args)
         .addField("Servers", client.guilds.array().length, true)
         .addField("Users", userCount, true)
         .addField("Latency", `${client.ping}ms`, true)
-        .addField("Uptime", timeUtil.fromMs(client.uptime, "hh:mm:ss"), true)
+        .addField("Uptime", util.formatMs(client.uptime), true)
         .addField("Version", config.version, true)
 
         .attachFile(starIcon)

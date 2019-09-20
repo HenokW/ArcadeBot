@@ -14,10 +14,7 @@ fs.readdir("./commands/", (err, files) =>
 
 	let jsfile = files.filter(f => f.split(".").pop() === "js");
 	if(jsfile.length <= 0)
-	{//
-		console.log("\n> Unable to find commands.");
-		return;
-	}
+		return console.log("\n> Unable to find commands.");
 
 	console.log("\n==== COMMANDS ====");
 	console.log(`${jsfile.length} commands found`);
@@ -61,7 +58,7 @@ client.on("guildDelete", async guild =>
 						`**Guild ID:** **\`${guild.id}\`**\n` +
 						`**Member Count:** **\`${guild.members.array().length}\`**`);
 	if(guild.iconURL) leaveMsg.setThumbnail(guild.iconURL);
-	client.emit("log", leaveMsg)
+	client.emit("log", leaveMsg);
 });
 
 client.on("error", (e) => {
@@ -81,7 +78,25 @@ client.on("log", async (e) => {
 	var logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929');
 	logChan.send({embed:e});
 });
+
 // client.on("debug", (e) => console.info(e));
+process.on('unhandledRejection', (reason, p) =>
+{
+	console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+	let errStack = reason.stack;
+	if(errStack.length > 2048) errStack = errStack.substring(0, 2047);
+
+	let msg = new Discord.RichEmbed()
+		.setColor("#ff0000")
+		.setTitle("Error: Unhandled Rejection")
+		.addField("Type", p)
+		.addField("Error message", errStack)
+		.setTimestamp();
+
+	client.emit("log", msg);
+
+// application specific logging, throwing an error, or other logic here
+});
 
 client.on("message", async message =>
 {

@@ -34,6 +34,30 @@ module.exports.missingTagError = function(client, message, searched)
         return message.reply({embed:msg}).catch(err => {});
 }
 
+module.exports.formatMs = function(time) {
+    time = time / 1000;
+
+	hr = Math.floor(time / 3600);
+    if(hr == '00')
+        hr = '';
+    else
+        hr = hr + 'h ';
+
+	min = Math.floor((time % 3600) / 60);
+    if(min == '00')
+        min = '';
+    else
+        min = min + 'm ';
+
+	sec = Math.floor((time % 3600) % 60);
+    if(sec == '00')
+        sec = '';
+    else
+        sec = sec + 's ';
+        
+    return `${hr}${min}${sec}`;
+}
+
 module.exports.timeInMS = function() {
     return Math.round((new Date()).getTime());
 }
