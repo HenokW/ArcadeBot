@@ -79,8 +79,11 @@ module.exports.run = async function(client, message, args)
             if(!tag) return saveError(client, message, tag);
 
             let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: tag});
-
             message.channel.stopTyping();
+
+            if(!requestData || requestData.error)
+                return util.saveError(client, message);
+
             sendProfileMessage(client, message, requestData);
         }
     }
@@ -166,7 +169,7 @@ function sendProfileMessage(client, message, data)
         .addField("Gold Looted", `<:rw_gold:622260066271363072> ${data.variables.totalGoldLooted}`, true)
         .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated}`, true);
 
-        if(data.team) msg.addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | ${data.team.tag}`, true);
+        if(data.team) msg.addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | #${data.team.tag}`, true);
         else {
             msg.addField("Team", `<:rw_noclan:624042525862395905> Not a member`, true);
         }

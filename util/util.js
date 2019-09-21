@@ -17,6 +17,21 @@ module.exports.tagCheck = function(tag)
     return tag;
 }
 
+module.exports.saveError = function(client, message, tag)
+{
+    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.RichEmbed()
+        .setColor(config.error_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .addField("Invalid tag provided", "Please make sure you're entering your valid player tag by using the **`save #TAG`** command. You can find your tag in-game in your player profile.\n\n" +
+            "**Valid Numbers:** `0, 2, 8, 9`\n" +
+            "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
+        .attachFile(errImg)
+        .setImage('attachment://errorImg.png');
+
+    return message.reply({embed:msg}).catch(error => { client.emit("error", error) });
+}
+
 module.exports.missingTagError = function(client, message, searched)
 {
     const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
@@ -31,7 +46,7 @@ module.exports.missingTagError = function(client, message, searched)
     if(searched)
         msg.setTitle("That user doesn't have a tag saved");
 
-        return message.reply({embed:msg}).catch(err => {});
+    return message.reply({embed:msg}).catch(err => {});
 }
 
 module.exports.formatMs = function(time) {
@@ -54,7 +69,7 @@ module.exports.formatMs = function(time) {
         sec = '';
     else
         sec = sec + 's ';
-        
+
     return `${hr}${min}${sec}`;
 }
 
