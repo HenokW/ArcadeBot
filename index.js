@@ -7,6 +7,7 @@ const fs = require("fs");
 const sqlite3 = require('sqlite3').verbose();
 const client = new Discord.Client();
 
+const devEnabled = true;
 fs.readdir("./commands/", (err, files) =>
 {
 	if(err)
@@ -93,7 +94,8 @@ process.on('unhandledRejection', (reason, p) =>
 		.addField("Error message", errStack)
 		.setTimestamp();
 
-	client.emit("log", msg);
+	if(!devEnabled)
+		client.emit("log", msg);
 
 // application specific logging, throwing an error, or other logic here
 });
@@ -134,9 +136,18 @@ async function startup()
 	const guildDB = "guildsDB";
 	await sqlHand.createdb(client, `./SQL/${guildDB}.db3`, "data", config.sql_guildQuery, "id");
 
+	const teamDB = "teamsDB";
+	await sqlHand.createdb(client, `./SQL/${teamDB}.db3`, "data", config.sql_teamDBQuery,"id");
+
+	const teamLogsDB = "teamLogsDB";
+	await sqlHand.createdb(client, `./SQL/${teamLogsDB}.db3`, "data", config.sql_teamLogsDBQuery,"id");
+
 	//Check to make sure we haven't missed an entry while offline
 	let sqlChecks = require("./util/sqlCheck.js");
 	await sqlChecks.run(client);
+
+	let logHandler = require("./util/logHandler.js");
+	logHandler.startup(client);
 }
 
 async function dirCheck()

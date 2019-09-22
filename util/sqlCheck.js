@@ -22,7 +22,8 @@ async function db_guildChecks(client)
             count++;
             var data = {
                 id: guildsArr[i].id,
-                prefix: config.default_prefix
+                prefix: config.default_prefix,
+                clan: null
             }
 
             await sqlHand.setData(client, dir, config.sql_guildSetterQuery, "data", data);
