@@ -27,7 +27,8 @@ module.exports.run = async function(client, message, args)
     let guildLogsData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "data", "id", message.guild.id);
 
     //We made it here! We're safe!
-    if(!guildLogsData) {
+    if(!guildLogsData)
+    {
         sqlData = {
             id: message.guild.id,
             tags: requestData.team.tag,
@@ -38,7 +39,8 @@ module.exports.run = async function(client, message, args)
         await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", sqlData);
         sendLogChannelMessage(client, message, message.mentions.channels.first(), requestData.team);
     }
-    else {
+    else
+    {
         let guildTags = guildLogsData.tags.split(',');
         let guildChannels = guildLogsData.channels.split(',');
 
@@ -46,9 +48,20 @@ module.exports.run = async function(client, message, args)
         {
             for(let i = 0; i < guildTags.length; i++)
                 if(guildTags[i] == requestData.team.tag)
-                    return logError(client, message, "USED", guildChannels[i]);
+                    return logError(client, message, "USED", guildChannels[i]);//346430947421323267
+        }
+        else {
+            guildTags.push(requestData.team.tag);
+            guildChannels.push(message.mentions.channels.first().id);
+
+            guildLogsData.tags = guildTags.join(',');
+            guildLogsData.channels = guildChannels.join(',');
+
+            await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
+            sendLogChannelMessage(client, message, message.mentions.channels.first(), requestData.team);
         }
     }
+    message.channel.stopTyping();
 }
 
 function sendLogChannelMessage(client, message, channel, data)

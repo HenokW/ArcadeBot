@@ -76,6 +76,7 @@ client.on("error", (e) => {
 
 client.on("warn", (e) => console.warn(e));
 client.on("log", async (e) => {
+	if(devEnabled) return;
 	var logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929');
 	logChan.send({embed:e});
 });
@@ -83,8 +84,10 @@ client.on("log", async (e) => {
 // client.on("debug", (e) => console.info(e));
 process.on('unhandledRejection', (reason, p) =>
 {
-	console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+	// console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
 	let errStack = reason.stack;
+	console.log(errStack);
+	console.log(reason);
 	if(errStack.length > 2048) errStack = errStack.substring(0, 2047);
 
 	let msg = new Discord.RichEmbed()

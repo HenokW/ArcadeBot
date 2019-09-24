@@ -13,13 +13,13 @@
     "sql_guildQuery": "id TEXT, prefix TEXT, clan TEXT",
     "sql_guildSetterQuery": "INSERT or REPLACE INTO data(id, prefix, clan) VALUES (@id, @prefix, @clan);",
 
-    "sql_playerDBQuery": "id INTEGER, tag TEXT",
+    "sql_playerDBQuery": "id TEXT, tag TEXT",
     "sql_playerDBSetterQuery": "INSERT or REPLACE INTO data(id, tag) VALUES (@id, @tag);",
 
-    "sql_teamDBQuery": "id INTEGER, tags TEXT, description TEXT, color TEXT, title TEXT, image TEXT",
+    "sql_teamDBQuery": "id TEXT, tags TEXT, description TEXT, color TEXT, title TEXT, image TEXT",
     "sql_teamDBSetterQuery": "INSERT or REPLACE INTO data(id, tags, description, color, title, image) VALUES (@id, @tags, @description, @color, @title, @image);",
 
-    "sql_teamLogsDBQuery": "id INTEGER, tags TEXT, channels TEXT, verified TEXT",
+    "sql_teamLogsDBQuery": "id TEXT, tags TEXT, channels TEXT, verified TEXT",
     "sql_teamLogsDBSetterQuery": "INSERT or REPLACE INTO data(id, tags, channels, verified) VALUES (@id, @tags, @channels, @verified);",
 
     "version": "1.2.1"

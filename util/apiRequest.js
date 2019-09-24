@@ -48,9 +48,15 @@ module.exports.request = async function(client, message, options)
             })
             .catch(err =>
             {
-                if(triedCount >= RETRY_LIMIT)
+                if(options.triedCount >= RETRY_LIMIT)
                 {
-                    reject(reqError(message));
+                    if(err.message.includes('404')) {
+                        tagError(client, message);
+                    }
+                    else
+                        reqError(message);
+
+                    reject(err);
                     client.emit("error", err);
                 }
                 else {
@@ -62,8 +68,26 @@ module.exports.request = async function(client, message, options)
     });
 }
 
+function tagError(client, message)
+{
+    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.RichEmbed()
+        .setColor(config.error_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .addField("Invalid tag provided", "Please make sure you're entering a valid search tag.\n\n" +
+            "**Valid Numbers:** `0, 2, 8, 9`\n" +
+            "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
+        .attachFile(errImg)
+        .setImage('attachment://errorImg.png');
+
+    message.reply({embed:msg}).catch(error => { client.emit("error", error) });
+    message.channel.stopTyping();
+}
+
 function reqError(message)
 {
+    if(!message) return;
+
     let msg = new Discord.RichEmbed()
         .setColor(config.error_color)
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)

@@ -70,11 +70,11 @@ async function sendTeamMessage(client, message, data)
     let scoreLB = members;
 
     await scoreLB.sort((a, b) => b.stars - a.stars);
-    if(scoreLB.length > 10) scoreLB.splice(limit - 1, scoreLB.length - limit);
+    if(scoreLB.length > 10) scoreLB.splice(limit - 1, scoreLB.length - limit + 1);
 
     //Making it nice and pretty
     //--------------
-    let leaders = undefined;
+    let leader = undefined;
     for(let i = 0; i < members.length; i++)
         if(members[i].role == "Leader")
         {
@@ -96,7 +96,7 @@ async function sendTeamMessage(client, message, data)
         .addField("Required Score", `<:rw_medal:622260064937312256> ${data.requiredScore}`, true)
         .addField("Dominations Won", `<:rw_white_star:622579023364751361> ${data.dominationsWon}`, true)
         .addField("Members", `<:rw_troops:622260065499349032> ${data.membersCount}/${teamLimit}`, true)
-        .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name}`)
+        .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name || undefined}`)
         .addField("Top Members", scoreLB, true);
 
 

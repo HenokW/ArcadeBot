@@ -6,8 +6,7 @@ const Discord = require("discord.js");
 const util = require("./util.js");
 const fs = require('fs');
 
-const LOG_DELAY = 30000; //How often we update our data
-// const LOG_DELAY = 300000; //How often we update our data
+const LOG_DELAY = 300000; //How often we update our data
 module.exports.startup = async function(client)
 {
     try
@@ -88,7 +87,7 @@ async function memberLeave(client, guild, channel, data, team)
         .setColor(config.error_color)
         .setAuthor(`${team.name} Logs`, team.badgeUrl)
         .addField(`Member left (${team.members.length}/25)\n`,
-            `${util.getLeagueMedal(data.stars)}**\`${data.stars}\`** ${data.name} `)
+            `${util.getLeagueMedal(data.stars)} **\`${data.stars}\`** ${data.name} `)
         .setTimestamp();
 
     (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
@@ -100,7 +99,7 @@ async function memberJoined(client, guild, channel, data, team)
         .setColor(config.blue_color)
         .setAuthor(`${team.name} Logs`, team.badgeUrl)
         .addField(`New member (${team.members.length}/25)\n`,
-            `${util.getLeagueMedal(data.stars)}**\`${data.stars}\`** ${data.name} `)
+            `${util.getLeagueMedal(data.stars)} **\`${data.stars}\`** ${data.name} `)
         .setTimestamp();
 
     (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
