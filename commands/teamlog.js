@@ -16,8 +16,16 @@ module.exports.run = async function(client, message, args)
     let channel = message.mentions.channels.first();
     let deleteParam = args[1];
 
+    if(deleteParam == "disable")
+        return disableLogChannel(client, message, channel);
+
     //Let's grab their tag; send a 'NOTEAM' error if they're not within a team, or not a staff member
     let userData = await sqlHand.getData(client, `./SQL/playersDB.db3`, "data", "id", message.author.id);
+    if(!userData || !userData.tag)
+    {
+        message.channel.stopTyping();
+        return util.missingTagError(client, message, false);
+    }
     let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: userData.tag});
 
     if(!requestData.team) return logError(client, message, "NOTEAM");
@@ -62,6 +70,44 @@ module.exports.run = async function(client, message, args)
         }
     }
     message.channel.stopTyping();
+}
+
+async function disableLogChannel(client, message, channel)
+{
+    //Checks if that specified channel is being logged
+    let guildLogsData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "data", "id", message.guild.id);
+    if(!guildLogsData) return util.sendErrorMessage(message, "You don't seem to have a logging channel setup.", "REPLY");
+
+    let guildTags = guildLogsData.tags.split(',');
+    let guildChannels = guildLogsData.channels.split(',');
+    if(!guildChannels.includes(channel.id)) return util.sendErrorMessage(message, `${channel} doesn't seem to be logging anything.`, "REPLY");
+
+    for(let i = guildChannels.length - 1; i >= 0; i--)
+    {
+        if(guildChannels[i] == channel.id)
+        {
+            guildChannels.splice(i, 1);
+            guildTags.splice(i, 1);
+        }
+    }
+
+    guildLogsData.tags = guildTags.join(',');
+    guildLogsData.channels = guildChannels.join(',');
+    await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
+
+    sendDisabledMessage(client, message, channel);
+}
+
+function sendDisabledMessage(client, message, channel)
+{
+    let msg = new Discord.RichEmbed()
+        .setColor(config.success_color)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setDescription(`${channel} has successfully been disabled, and is no longer a logging channel.`)
+        .setTimestamp();
+
+    message.channel.stopTyping();
+    channel.send({embed:msg}).catch(err => { });
 }
 
 function sendLogChannelMessage(client, message, channel, data)

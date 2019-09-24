@@ -81,6 +81,27 @@ async function main(client)
     setTimeout(function() { main(client); }, LOG_DELAY);
 }
 
+async function removeLogChannel(client, guild, channel)
+{
+    let guildLogsData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "data", "id", guild.id);
+
+    let guildTags = guildLogsData.tags.split(',');
+    let guildChannels = guildLogsData.channels.split(',');
+
+    for(let i = guildChannels.length - 1; i >= 0; i--)
+    {
+        if(guildChannels[i] == channel.id)
+        {
+            guildChannels.splice(i, 1);
+            guildTags.splice(i, 1);
+        }
+    }
+
+    guildLogsData.tags = guildTags.join(',');
+    guildLogsData.channels = guildChannels.join(',');
+    await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
+}
+
 async function memberLeave(client, guild, channel, data, team)
 {
     let msg = new Discord.RichEmbed()
@@ -90,7 +111,10 @@ async function memberLeave(client, guild, channel, data, team)
             `${util.getLeagueMedal(data.stars)} **\`${data.stars}\`** ${data.name} `)
         .setTimestamp();
 
-    (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    (await client.channels.get(channel)).send({embed:msg}).catch(err => {
+        if(err.message.includes("Cannot read property 'send' of undefined"))
+            removeLogChannel(client, guild, channel);
+    });
 }
 
 async function memberJoined(client, guild, channel, data, team)
@@ -102,7 +126,9 @@ async function memberJoined(client, guild, channel, data, team)
             `${util.getLeagueMedal(data.stars)} **\`${data.stars}\`** ${data.name} `)
         .setTimestamp();
 
-    (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    try  {
+        (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    } catch(err) { console.log(err); }
 }
 
 async function descChange(client, guild, channel, oldData, data)
@@ -115,7 +141,9 @@ async function descChange(client, guild, channel, oldData, data)
         .addField("New description", `${data.description}`, true)
         .setTimestamp();
 
-    (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    try  {
+        (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    } catch(err) { console.log(err); }
 }
 
 async function scoreChange(client, guild, channel, oldData, data)
@@ -128,7 +156,9 @@ async function scoreChange(client, guild, channel, oldData, data)
         .addField("New requirements", `<:rw_star_full:621975382907813918> ${data.requiredScore.toLocaleString()}`, true)
         .setTimestamp();
 
-    (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    try  {
+        (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    } catch(err) { console.log(err); }
 }
 
 async function badgeChange(client, guild, channel, data)
@@ -140,7 +170,9 @@ async function badgeChange(client, guild, channel, data)
         .setImage(data.badgeUrl)
         .setTimestamp();
 
-    (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    try  {
+        (await client.channels.get(channel)).send({embed:msg}).catch(err => {});
+    } catch(err) { console.log(err); }
 }
 
 function prepareData(data)

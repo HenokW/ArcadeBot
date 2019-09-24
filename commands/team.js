@@ -75,12 +75,13 @@ async function sendTeamMessage(client, message, data)
     //Making it nice and pretty
     //--------------
     let leader = undefined;
-    for(let i = 0; i < members.length; i++)
-        if(members[i].role == "Leader")
+    for(let i = 0; i < data.members.length; i++)
+        if(data.members[i].role == "Leader")
         {
             leader = members[i];
             break;
         }
+
     let temp = "";
     for(let i = 0; i < scoreLB.length; i++)
         temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${scoreLB[i].name}\n`;
