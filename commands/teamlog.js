@@ -9,6 +9,8 @@ const allowedRoles = ["Leader", "Co-Leader"];
 module.exports.run = async function(client, message, args)
 {
     message.channel.startTyping();
+    if(!message.member.hasPermission("ADMINISTRATOR")) return util.sendErrorMessage(message, "You must be a server administrator to use this command.", "REPLY");
+
     //Check to make sure we have a channel provided, and they're staff within their team
     if(!message.mentions.channels.first()) return logError(client, message); //No channel provided, send a 'help' message
     if(message.mentions.channels.first() != args[0]) return logError(client, message);

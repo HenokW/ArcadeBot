@@ -67,10 +67,16 @@ async function sendTeamMessage(client, message, data)
     const limit = 10;
 
     let members = data.members;
-    let scoreLB = members;
+    let scoreLB = members.slice(0);
+    let staffLB = members.slice(0);
 
     await scoreLB.sort((a, b) => b.stars - a.stars);
-    if(scoreLB.length > 10) scoreLB.splice(limit - 1, scoreLB.length - limit + 1);
+    let staffLB_sorted = staffLB.filter(function(obj) {
+        return ['Leader', 'Co-Leader'].includes(obj.role);
+    });
+    await staffLB_sorted.sort((a, b) => b.stars - a.stars);
+    if(scoreLB.length > limit) scoreLB.splice(limit, scoreLB.length - 1);
+    if(staffLB_sorted.length > 5) staffLB_sorted.splice(5, staffLB_sorted.length - 1);
 
     //Making it nice and pretty
     //--------------
@@ -86,6 +92,11 @@ async function sendTeamMessage(client, message, data)
     for(let i = 0; i < scoreLB.length; i++)
         temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${scoreLB[i].name}\n`;
     scoreLB = temp;
+    temp = "";
+    for(let i = 0; i < staffLB_sorted.length; i++)
+        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(staffLB_sorted[i].stars)} **\`${staffLB_sorted[i].stars}\`** ${staffLB_sorted[i].name}\n`;
+    staffLB_sorted = temp;
+
     //--------------
 
     let msg = new Discord.RichEmbed()
@@ -93,12 +104,13 @@ async function sendTeamMessage(client, message, data)
         .setAuthor(`${data.name} #${data.tag}`, data.badgeUrl)
         .setDescription(data.description)
         .setThumbnail(data.badgeUrl)
-        .addField("Score", `<:rw_gold_star:622260094775853066> ${data.score}`, true)
-        .addField("Required Score", `<:rw_medal:622260064937312256> ${data.requiredScore}`, true)
-        .addField("Dominations Won", `<:rw_white_star:622579023364751361> ${data.dominationsWon}`, true)
+        .addField("Score", `<:rw_gold_star:622260094775853066> ${data.score.toLocaleString()}`, true)
+        .addField("Required Score", `<:rw_medal:622260064937312256> ${data.requiredScore.toLocaleString()}`, true)
+        .addField("Dominations Won", `<:rw_white_star:622579023364751361> ${data.dominationsWon.toLocaleString()}`, true)
         .addField("Members", `<:rw_troops:622260065499349032> ${data.membersCount}/${teamLimit}`, true)
         .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name || undefined}`)
-        .addField("Top Members", scoreLB, true);
+        .addField("Top Members", scoreLB, true)
+        .addField("Top Staff", staffLB_sorted, true);
 
 
     message.reply({embed:msg}).catch(err => {});

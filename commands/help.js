@@ -19,6 +19,7 @@ module.exports.run = async function(client, message, args)
         ` **\`${prefix}team\`** - Shows your team's info.\n\n** **`)
 
         .addField("Server Commands",
+        `\***\`${prefix}teamlog\`** - Logs your teams activity.\n`+
         `\***\`${prefix}setprefix\`** - Changes your server's prefix.\n\n** **`)
 
         .addField("Misc Commands",

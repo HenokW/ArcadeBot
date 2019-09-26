@@ -27,13 +27,11 @@ module.exports.run = async function(client, message, args)
             return saveSuccess(client, message, requestData);
         }
         else {
-            message.channel.stopTyping();
             return util.saveError(client, message, tag);
         }
     }
     catch(err)
     {
-        message.channel.stopTyping();
         return util.saveError(client, message, tag);
     }
 }

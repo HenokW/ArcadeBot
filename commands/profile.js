@@ -79,11 +79,11 @@ module.exports.run = async function(client, message, args)
             if(!tag) return saveError(client, message, tag);
 
             let requestData = await apiReq.request(client, message, {endpoint: "player/", tag: tag});
-            message.channel.stopTyping();
 
             if(!requestData || requestData.error)
                 return util.saveError(client, message);
 
+            message.channel.stopTyping();
             sendProfileMessage(client, message, requestData);
         }
     }
@@ -148,39 +148,39 @@ function sendProfileMessage(client, message, data)
         .setAuthor(`${data.name} #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
         .attachFiles([leagueIcon])
         .setThumbnail('attachment://league_icon.png')
-        .addField("Current Stars", `${star} ${data.stars}`, true)
-        .addField("Lifetime Stars", `<:rw_gold_star:622260094775853066> ${data.variables.attackStars + data.variables.defenseStars}`, true)
-        .addField("Season Points", `<:rw_medal:622260064937312256> ${seasonPoints}`, true)
+        .addField("Current Stars", `${star} ${data.stars.toLocaleString()}`, true)
+        .addField("Lifetime Stars", `<:rw_gold_star:622260094775853066> ${(data.variables.attackStars + data.variables.defenseStars).toLocaleString()}`, true)
+        .addField("Season Points", `<:rw_medal:622260064937312256> ${seasonPoints.toLocaleString()}`, true)
         .addField(`HQ Level`, `${hqEmojis[data.variables.hqLevel]} ${data.variables.hqLevel}`, true)
         .addField("Chopper Level", `<:rw_chopper:622268961077198869> ${data.variables.chopperLevel}`, true)
 
-        .addField("Domination Attacks", `<:rw_troops:622260065499349032> ${data.variables.totalDominationAttacks || 0}`, true)
-        .addField("Domination Stars", `<:rw_white_star:622579023364751361> ${data.variables.dominationStars || 0}`, true)
+        .addField("Domination Attacks", `<:rw_troops:622260065499349032> ${data.variables.totalDominationAttacks.toLocaleString() || 0}`, true)
+        .addField("Domination Stars", `<:rw_white_star:622579023364751361> ${data.variables.dominationStars.toLocaleString() || 0}`, true)
 
-        .addField("Attack Stars", `<:rw_attack_stars:624046529937801283>  ${data.variables.attackStars || 0}`, true)
-        .addField("Defense Stars", `<:rw_defense_stars:624046530881519616>  ${data.variables.defenseStars || 0}`, true)
-        .addField("Total Attacks", `<:rw_bullets:622260067013492737> ${data.variables.totalAttacks}`, true)
-        .addField("Attacks Won", `<:rw_gun:622260073724641291> ${data.variables.totalAttacksWon}`, true)
-        .addField("Attacks Lost", `<:rw_empty_star:622260080850632724> ${data.variables.totalAttacksLost}`, true)
-        .addField("Total Defenses", `<:rw_tri_shields:622260073963454479> ${data.variables.totalDefensesWon + data.variables.totalDefensesLost}`, true)
-        .addField("Defenses Won", `<:rw_defenses_won:624055275728535563> ${data.variables.totalDefensesWon}`, true)
-        .addField("Defenses Lost", `<:rw_defenses_lost:624055094710763541> ${data.variables.totalDefensesLost}`, true)
+        .addField("Attack Stars", `<:rw_attack_stars:624046529937801283>  ${data.variables.attackStars.toLocaleString() || 0}`, true)
+        .addField("Defense Stars", `<:rw_defense_stars:624046530881519616>  ${data.variables.defenseStars.toLocaleString() || 0}`, true)
+        .addField("Total Attacks", `<:rw_bullets:622260067013492737> ${data.variables.totalAttacks.toLocaleString()}`, true)
+        .addField("Attacks Won", `<:rw_gun:622260073724641291> ${data.variables.totalAttacksWon.toLocaleString()}`, true)
+        .addField("Attacks Lost", `<:rw_empty_star:622260080850632724> ${data.variables.totalAttacksLost.toLocaleString()}`, true)
+        .addField("Total Defenses", `<:rw_tri_shields:622260073963454479> ${(data.variables.totalDefensesWon + data.variables.totalDefensesLost).toLocaleString()}`, true)
+        .addField("Defenses Won", `<:rw_defenses_won:624055275728535563> ${data.variables.totalDefensesWon.toLocaleString()}`, true)
+        .addField("Defenses Lost", `<:rw_defenses_lost:624055094710763541> ${data.variables.totalDefensesLost.toLocaleString()}`, true)
 
-        .addField("Gold Looted", `<:rw_gold:622260066271363072> ${data.variables.totalGoldLooted}`, true)
-        .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated}`, true);
+        .addField("Gold Looted", `<:rw_gold:622260066271363072> ${data.variables.totalGoldLooted.toLocaleString()}`, true)
+        .addField("Gold Donated", `<:rw_give_gold:622272799549030401> ${data.variables.totalGoldDonated.toLocaleString()}`, true);
 
         if(data.team) msg.addField(data.team.role, `<:rw_0:622319032221040650> ${data.team.name} | #${data.team.tag}`, true);
         else {
             msg.addField("Team", `<:rw_noclan:624042525862395905> Not a member`, true);
         }
 
-        msg.addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened || 0}`, true)
-        .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${data.variables.obstaclesRemoved || 0}`, true)
+        msg.addField("Free Boxes Opened", `<:rw_free_box:622121677907820547> ${data.variables.totalFreeBoxesOpened.toLocaleString() || 0}`, true)
+        .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${data.variables.obstaclesRemoved.toLocaleString() || 0}`, true)
 
         .addBlankField()
         .addField(`Commanders Unlocked`, `${commanderText} **\`${myCommanders.length}/${commanderCount}\`**`, false)
         .addField(`Troops Unlocked`, `${troopText} **\`${myTroops.length}/${troopCount}\`**`, false)
-        .addField(`Abilities Unlocked`, `${abilityText} **\`${myAbilities.length}/${abilityCount}\`**`, false)
+        .addField(`Airdrops Unlocked`, `${abilityText} **\`${myAbilities.length}/${abilityCount}\`**`, false)
         .addField(`Defenses Unlocked`, `${defenseText} **\`${myDefenses.length}/${defenseCount}\`**`, false)
         //.setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
 

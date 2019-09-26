@@ -11,3 +11,4 @@ SQL/
 ## Specific files
 package-lock.json
 config.json
+teams.js

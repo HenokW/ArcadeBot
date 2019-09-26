@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const axios = require("axios");
 
 const RETRY_LIMIT = 3; //How many times we should retry a failed request before returning an error
-const TIMEOUT_DURATION = 2500; //Time in ms
+const TIMEOUT_DURATION = 3000; //Time in ms
 const API_URL = "https://api.rushstats.com/v1/";
 let request = axios.create(
     {
