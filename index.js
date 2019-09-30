@@ -108,6 +108,7 @@ client.on("message", async message =>
 	if(message.channel.type === "dm") return;
 	if(message.author.bot) return;
 
+	if(devEnabled && message.guild.id != '346430947421323267') return;
 	let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'id', message.guild.id);
 
 	let args = message.content.slice(guildInfo.prefix.length).trim().split(' ');

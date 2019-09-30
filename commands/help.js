@@ -12,20 +12,21 @@ module.exports.run = async function(client, message, args)
         .setColor(config.success_color)
         .setAuthor(`${client.user.username}#${client.user.discriminator}`, client.user.displayAvatarURL)
         .addField("General Commands",
-        ` **\`${prefix}profile\`** - Shows your in-game profile stats.\n` +
-        ` **\`${prefix}save\`** - Links your in-game profile to your account.\n` +
-        ` **\`${prefix}boxes\`** - Shows your upcoming box cycles.\n`+
-        ` **\`${prefix}levels\`** - Shows your card levels.\n`+
-        ` **\`${prefix}team\`** - Shows your team's info.\n\n** **`)
+        `**\`${prefix}profile\`** - Shows your in-game profile stats.\n` +
+        `**\`${prefix}save\`** - Links your in-game profile to your account.\n` +
+        `**\`${prefix}boxes\`** - Shows your upcoming box cycles.\n` +
+        `**\`${prefix}levels\`** - Shows your card levels.\n` +
+        `**\`${prefix}compare\`** - Compares your stats with another player's.\n` +
+        `**\`${prefix}team\`** - Shows your team's info.\n\n** **`)
 
         .addField("Server Commands",
-        `\***\`${prefix}teamlog\`** - Logs your teams activity.\n`+
-        `\***\`${prefix}setprefix\`** - Changes your server's prefix.\n\n** **`)
+        `\* **\`${prefix}teamlog\`** - Logs your teams activity.\n`+
+        `\* **\`${prefix}setprefix\`** - Changes your server's prefix.\n\n** **`)
 
         .addField("Misc Commands",
-        ` **\`${prefix}invite\`** - Bot invite link.\n` +
-        ` **\`${prefix}support\`** - Support server link.\n` +
-        ` **\`${prefix}info\`** - Shows info based on the bot.\n`)
+        `**\`${prefix}invite\`** - Bot invite link.\n` +
+        `**\`${prefix}support\`** - Support server link.\n` +
+        `**\`${prefix}info\`** - Shows info based on the bot.\n`)
 
         .addBlankField()
         .addField("Dev", `<:twitter:528807292305408030> [Henok](https://twitter.com/stupidsedits)`, true)
