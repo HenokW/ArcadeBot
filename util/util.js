@@ -88,7 +88,7 @@ module.exports.sendErrorMessage = function(message, content, type)
     const prefixMessage = new Discord.RichEmbed()
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
 		.setColor(config.error_color)
-		.setDescription(`✖ ${content}`);
+		.setDescription(`<:red_circle:628345905375870977> ${content}`);
 
     switch(type)
     {
