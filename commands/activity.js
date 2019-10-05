@@ -71,7 +71,7 @@ async function sendTeamMessage(client, message, data)
 
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} #${data.tag}`, data.badgeUrl)
+        .setAuthor(`${data.name} | #${data.tag}`, data.badgeUrl)
         .setThumbnail(data.badgeUrl)
         .addField("Members", `<:rw_troops:622260065499349032> ${data.membersCount}/${teamLimit}`, true)
         .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name}`, true);

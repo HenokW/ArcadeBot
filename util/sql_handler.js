@@ -7,6 +7,7 @@ table - the name of the table within the desired database
 identifier - the column used to seperate unique entries
 index - the desired entry to be returned
 */
+//db.rawQuery("select * from table",null);
 exports.getData = async function(client, sqlDir, table, identifier, index)
 {
     return new Promise(async (resolve, reject) =>
@@ -22,6 +23,41 @@ exports.getData = async function(client, sqlDir, table, identifier, index)
                 let query = db.prepare(`SELECT * FROM ${table} WHERE ${identifier} = ?`);
                 dataEntry = new Promise((resolve, reject) => {
                     query.get(index, function(err, data) { resolve(data); });
+                });
+
+                query.finalize();
+            });
+
+            db.close();
+            await dataEntry.then(data => returnData = data);
+            resolve(returnData);
+        }
+        catch(e) {
+            client.emit("error", e);
+            await db.close();
+
+            reject(e);
+        }
+    });
+
+    promise.then((data) => { console.log(data) });
+}
+
+exports.getAll = async function(client, sqlDir, table)
+{
+    return new Promise(async (resolve, reject) =>
+    {
+        let db = new SQLite.Database(sqlDir);
+        try
+        {
+            let dataEntry = undefined;
+            let returnData = undefined;
+
+            db.serialize(function()
+            {
+                let query = db.prepare(`SELECT * FROM ${table}`);
+                dataEntry = new Promise((resolve, reject) => {
+                    query.all(function(err, data) { console.log(data); resolve(data); });
                 });
 
                 query.finalize();

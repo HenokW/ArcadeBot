@@ -11,6 +11,7 @@ module.exports.run = function(client, message, args)
     for(let i = 0; i < client.guilds.array().length; i++)
         userCount += client.guilds.array()[i].members.array().length;
 
+    let lastMsg = new Date() - message.createdTimestamp;
     const starIcon = new Discord.Attachment('./resources/game_assets/ui_sprite_480.png', 'star_icon.png');
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
@@ -19,7 +20,8 @@ module.exports.run = function(client, message, args)
         .addField("Developer", "StupidEdits#4461", true)
         .addField("Servers", client.guilds.array().length, true)
         .addField("Users", userCount.toLocaleString(), true)
-        .addField("Latency", `${Math.floor(client.ping)}ms`, true)
+        .addField("API Delay", `${Math.floor(client.ping || 'N/A')}ms`, true)
+        .addField("Latency", `${new Date() - message.createdTimestamp}ms`, true)
         .addField("Uptime", util.formatMs(client.uptime), true)
         .addField("Version", config.version, true)
 

@@ -38,8 +38,8 @@ async function main(client)
 
         for(let j = 0; j < tags.length; j++)
         {
-            if(tags[j] == '') return;
-            
+            if(tags[j] == '' || channels[j] == '') continue;
+
             let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]});
             let cleanedData = prepareData(teamData);
 

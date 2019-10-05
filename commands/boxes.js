@@ -75,7 +75,7 @@ function sendBoxCycle(message, data, cycle, cycle2)
     const boxImg = new Discord.Attachment(getRandomBox(), 'box.png');
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} #${data.tag}`, message.author.displayAvatarURL)
+        .setAuthor(`${data.name} | #${data.tag}`, message.author.displayAvatarURL)
         //.setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
         .addField(`Current box cycle`, cycle)
         .addField(`Future box cycle`, futureCycle)

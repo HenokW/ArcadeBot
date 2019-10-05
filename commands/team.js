@@ -90,18 +90,18 @@ async function sendTeamMessage(client, message, data)
 
     let temp = "";
     for(let i = 0; i < scoreLB.length; i++)
-        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${scoreLB[i].name}\n`;
+        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${util.level_to_emote[scoreLB[i].expLevel]} ${scoreLB[i].name}\n`;
     scoreLB = temp;
     temp = "";
     for(let i = 0; i < staffLB_sorted.length; i++)
-        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(staffLB_sorted[i].stars)} **\`${staffLB_sorted[i].stars}\`** ${staffLB_sorted[i].name}\n`;
+        temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(staffLB_sorted[i].stars)} **\`${staffLB_sorted[i].stars}\`** ${util.level_to_emote[staffLB_sorted[i].expLevel]} ${staffLB_sorted[i].name}\n`;
     staffLB_sorted = temp;
 
     //--------------
 
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} #${data.tag}`, data.badgeUrl)
+        .setAuthor(`${data.name} | #${data.tag}`, data.badgeUrl)
         .setDescription(data.description)
         .setThumbnail(data.badgeUrl)
         .addField("Score", `<:rw_gold_star:622260094775853066> ${data.score.toLocaleString()}`, true)

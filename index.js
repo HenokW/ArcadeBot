@@ -84,7 +84,7 @@ client.on("log", async (e) => {
 // client.on("debug", (e) => console.info(e));
 process.on('unhandledRejection', (reason, p) =>
 {
-	// console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+	// con8274093sole.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
 	let errStack = reason.stack;
 	console.log(errStack);
 	console.log(reason);
@@ -117,6 +117,13 @@ client.on("message", async message =>
 	//If they happened to ping the bot
 	if(message.content == (client.user))
 		return message.channel.send("For further help, please feel free to use **`" + guildInfo.prefix + "help`** for a complete rundown of all my commands.\n\n**Guild prefix:** `" + guildInfo.prefix + "`").catch(err => {});
+
+	//Prefix resetting
+	if(message.content.trim().split(' ')[0] == message.mentions.users.first() && args[0] == 'resetprefix')
+	{
+		let resetFile = require('./commands/setprefix.js');
+		return resetFile.reset(client, message, args);
+	}
 
 	//Not their prefix, RUN AWAY!
 	if(!message.content.startsWith(guildInfo.prefix)) return;

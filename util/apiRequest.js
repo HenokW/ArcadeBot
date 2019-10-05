@@ -48,9 +48,9 @@ module.exports.request = async function(client, message, options)
             })
             .catch(err =>
             {
-                if(options.triedCount >= RETRY_LIMIT)
+                if(options.triedCount >= RETRY_LIMIT || (err.message != undefined && err.message.includes("Not Found")))
                 {
-                    if(err.message.includes('404')) {
+                    if(err.message.includes('404') || err.message.includes("Not Found")) {
                         tagError(client, message);
                     }
                     else

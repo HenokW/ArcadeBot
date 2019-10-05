@@ -73,7 +73,7 @@ async function sendCardInfo(client, message, data)
     const upgradeIcon = new Discord.Attachment('./resources/game_assets/ui_sprite_298.png', 'upgrade.png');
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
+        .setAuthor(`${data.name} | #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
         .attachFile(upgradeIcon)
         .setThumbnail('attachment://upgrade.png')
         .addField(`HQ Level`, `${hqEmojis[data.variables.hqLevel]} ${data.variables.hqLevel}`, true)

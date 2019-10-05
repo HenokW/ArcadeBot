@@ -124,53 +124,60 @@ async function compareStats(client, message, myData, uData)
     ctx.drawImage(p1LeagueIcon, Math.floor(statCanvas.width / 2) - 197, 0, 70, 70); //X, Y, Constrain X, Constrain Y
     ctx.drawImage(p2LeagueIcon, Math.floor(statCanvas.width / 2) + 107, statCanvas.height - 70, 70, 70); //X, Y, Constrain X, Constrain Y
 
+    let { body: p1Level } = await snekfetch.get(myData.expLevel <= 100? `https://www.rushstats.com/assets/level/${myData.expLevel}.png` : `https://www.rushstats.com/assets/level/100.png` ).catch(err => {});
+    let { body: p2Level } = await snekfetch.get(uData.expLevel <= 100? `https://www.rushstats.com/assets/level/${uData.expLevel}.png` : `https://www.rushstats.com/assets/level/100.png` ).catch(err => {});
+    let p1LevelIcon = await canvas.loadImage(p1Level).catch(err => {});
+    let p2LevelIcon = await canvas.loadImage(p2Level).catch(err => {});
+    ctx.drawImage(p1LevelIcon, Math.floor(statCanvas.width / 2) - 15, 5, 33, 33); //X, Y, Constrain X, Constrain Y
+    ctx.drawImage(p2LevelIcon, Math.floor(statCanvas.width / 2) - 35, statCanvas.height - 41, 33, 33); //X, Y, Constrain X, Constrain Y
+
     //1st column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.stars || 0) - (uData.stars  || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 4) - 5}); //Stars
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.hqLevel || 0) - (uData.variables.hqLevel || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 2) - 28}); //HQ
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalDominationAttacks || 0) - (uData.variables.totalDominationAttacks || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50}); //Dom Attacks
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.attackStars || 0) - (uData.variables.attackStars || 0)).toLocaleString()}`, x: 65, y: statCanvas.height - 72}); //Attack Stars
-    ctx.drawImage( ((myData.stars || 0) - (uData.stars  || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 4) - 3, 25, 25 );
-    ctx.drawImage( ((myData.variables.hqLevel || 0) - (uData.variables.hqLevel  || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 2) - 26, 25, 25);
-    ctx.drawImage( ((myData.variables.totalDominationAttacks || 0) - (uData.variables.totalDominationAttacks || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 48, 25, 25);
-    ctx.drawImage( ((myData.variables.attackStars || 0) - (uData.variables.attackStars || 0)) < 0? arrDownIcon : arrUpIcon, 54, statCanvas.height - 70, 25, 25);
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.stars || 0) - (uData.stars  || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 4) - 10}); //Stars
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.hqLevel || 0) - (uData.variables.hqLevel || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 2) - 33}); //HQ
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalDominationAttacks || 0) - (uData.variables.totalDominationAttacks || 0)).toLocaleString()}`, x: 65, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 55}); //Dom Attacks
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.attackStars || 0) - (uData.variables.attackStars || 0)).toLocaleString()}`, x: 65, y: statCanvas.height - 77}); //Attack Stars
+    ctx.drawImage( ((myData.stars || 0) - (uData.stars  || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 4) - 5, 25, 25 );
+    ctx.drawImage( ((myData.variables.hqLevel || 0) - (uData.variables.hqLevel  || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 2) - 28, 25, 25);
+    ctx.drawImage( ((myData.variables.totalDominationAttacks || 0) - (uData.variables.totalDominationAttacks || 0)) < 0? arrDownIcon : arrUpIcon, 54, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50, 25, 25);
+    ctx.drawImage( ((myData.variables.attackStars || 0) - (uData.variables.attackStars || 0)) < 0? arrDownIcon : arrUpIcon, 54, statCanvas.height - 72, 25, 25);
 
     //2nd column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs(( (myData.variables.attackStars + myData.variables.defenseStars || 0) ) - ((uData.variables.attackStars + uData.variables.defenseStars || 0) )).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 4) - 5}); //Lifetime Stars
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.chopperLevel || 0) - (uData.variables.chopperLevel || 0)).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 2) - 28}); //Chopper
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.dominationStars || 0) - (uData.variables.dominationStars || 0)).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50}); //Dom Stars
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.defenseStars || 0) - (uData.variables.defenseStars || 0)).toLocaleString()}`, x: 191, y: statCanvas.height - 72}); //Defense Stars
-    ctx.drawImage( (( (myData.variables.attackStars + myData.variables.defenseStars || 0) ) - ((uData.variables.attackStars + uData.variables.defenseStars || 0) )) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 4) - 3, 25, 25);
-    ctx.drawImage( ((myData.variables.chopperLevel || 0) - (uData.variables.chopperLevel || 0)) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 2) - 26, 25, 25);
-    ctx.drawImage( ((myData.variables.dominationStars || 0) - (uData.variables.dominationStars || 0)) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 48, 25, 25);
-    ctx.drawImage( ((myData.variables.defenseStars || 0) - (uData.variables.defenseStars || 0)) < 0? arrDownIcon : arrUpIcon, 180, statCanvas.height - 70, 25, 25);
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs(( (myData.variables.attackStars + myData.variables.defenseStars || 0) ) - ((uData.variables.attackStars + uData.variables.defenseStars || 0) )).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 4) - 10}); //Lifetime Stars
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.chopperLevel || 0) - (uData.variables.chopperLevel || 0)).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 2) - 33}); //Chopper
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.dominationStars || 0) - (uData.variables.dominationStars || 0)).toLocaleString()}`, x: 191, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 55}); //Dom Stars
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.defenseStars || 0) - (uData.variables.defenseStars || 0)).toLocaleString()}`, x: 191, y: statCanvas.height - 77}); //Defense Stars
+    ctx.drawImage( (( (myData.variables.attackStars + myData.variables.defenseStars || 0) ) - ((uData.variables.attackStars + uData.variables.defenseStars || 0) )) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 4) - 5, 25, 25);
+    ctx.drawImage( ((myData.variables.chopperLevel || 0) - (uData.variables.chopperLevel || 0)) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 2) - 28, 25, 25);
+    ctx.drawImage( ((myData.variables.dominationStars || 0) - (uData.variables.dominationStars || 0)) < 0? arrDownIcon : arrUpIcon, 180, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50, 25, 25);
+    ctx.drawImage( ((myData.variables.defenseStars || 0) - (uData.variables.defenseStars || 0)) < 0? arrDownIcon : arrUpIcon, 180, statCanvas.height - 72, 25, 25);
 
     //3rd column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.seasonPoints || 0) - (uData.variables.seasonPoints || 0)).toLocaleString()}`, x: 317, y: statCanvas.height - 72}); //Season Points
-    ctx.drawImage( ((myData.variables.seasonPoints || 0) - (uData.variables.seasonPoints || 0)) < 0? arrDownIcon : arrUpIcon, 306, statCanvas.height - 70, 25, 25);
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.seasonPoints || 0) - (uData.variables.seasonPoints || 0)).toLocaleString()}`, x: 317, y: statCanvas.height - 77}); //Season Points
+    ctx.drawImage( ((myData.variables.seasonPoints || 0) - (uData.variables.seasonPoints || 0)) < 0? arrDownIcon : arrUpIcon, 306, statCanvas.height - 72, 25, 25);
     //---------------------------------
     //5th column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacks || 0) - (uData.variables.totalAttacks || 0)).toLocaleString()}`, x: 535, y: Math.floor(statCanvas.height / 4) - 5}); //Attacks
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacks || 0) - (uData.variables.totalAttacks || 0)).toLocaleString()}`, x: 535, y: Math.floor(statCanvas.height / 4) - 10}); //Attacks
     ctx.drawImage( ((myData.variables.totalAttacks || 0) - (uData.variables.totalAttacks || 0)) < 0? arrDownIcon : arrUpIcon, 524, Math.floor(statCanvas.height / 4) - 5, 25, 25);
 
     //6th column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacksWon || 0) - (uData.variables.totalAttacksWon || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 4) - 5}); //Attacks Won
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs(( (myData.variables.totalDefensesWon + myData.variables.totalDefensesLost) || 0) - ( (uData.variables.totalDefensesWon + uData.variables.totalDefensesLost) || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 2) - 28}); //Defenses
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalGoldDonated || 0) - (uData.variables.totalGoldDonated || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50}); //Gold donated
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalFreeBoxesOpened || 0) - (uData.variables.totalFreeBoxesOpened || 0)).toLocaleString()}`, x: 661, y: statCanvas.height - 72}); //Free boxes
-    ctx.drawImage( ((myData.variables.totalAttacksWon || 0) - (uData.variables.totalAttacksWon || 0)) < 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 4) - 3, 25, 25);
-    ctx.drawImage( (( (myData.variables.totalDefensesWon + myData.variables.totalDefensesLost) || 0) - ( (uData.variables.totalDefensesWon + uData.variables.totalDefensesLost) || 0))< 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 2) - 26, 25, 25);
-    ctx.drawImage( ((myData.variables.totalGoldDonated || 0) - (uData.variables.totalGoldDonated || 0)) < 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 48, 25, 25);
-    ctx.drawImage( ((myData.variables.totalFreeBoxesOpened || 0) - (uData.variables.totalFreeBoxesOpened || 0)) < 0? arrDownIcon : arrUpIcon, 650, statCanvas.height - 70, 25, 25);
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacksWon || 0) - (uData.variables.totalAttacksWon || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 4) - 10}); //Attacks Won
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs(( (myData.variables.totalDefensesWon + myData.variables.totalDefensesLost) || 0) - ( (uData.variables.totalDefensesWon + uData.variables.totalDefensesLost) || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 2) - 33}); //Defenses
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalGoldDonated || 0) - (uData.variables.totalGoldDonated || 0)).toLocaleString()}`, x: 661, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 55}); //Gold donated
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalFreeBoxesOpened || 0) - (uData.variables.totalFreeBoxesOpened || 0)).toLocaleString()}`, x: 661, y: statCanvas.height - 77}); //Free boxes
+    ctx.drawImage( ((myData.variables.totalAttacksWon || 0) - (uData.variables.totalAttacksWon || 0)) < 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 4) - 5, 25, 25);
+    ctx.drawImage( (( (myData.variables.totalDefensesWon + myData.variables.totalDefensesLost) || 0) - ( (uData.variables.totalDefensesWon + uData.variables.totalDefensesLost) || 0))< 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 2) - 28, 25, 25);
+    ctx.drawImage( ((myData.variables.totalGoldDonated || 0) - (uData.variables.totalGoldDonated || 0)) < 0? arrDownIcon : arrUpIcon, 650, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50, 25, 25);
+    ctx.drawImage( ((myData.variables.totalFreeBoxesOpened || 0) - (uData.variables.totalFreeBoxesOpened || 0)) < 0? arrDownIcon : arrUpIcon, 650, statCanvas.height - 72, 25, 25);
 
     //7th column
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacksLost || 0) - (uData.variables.totalAttacksLost || 0)).toLocaleString()}`, x: 787, y: Math.floor(statCanvas.height / 4) - 5}); //Attacks lost
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalDefensesWon || 0) - (uData.variables.totalDefensesWon || 0)).toLocaleString()}`, x: 787, y: Math.floor(statCanvas.height / 2) - 28}); //Defenses Won
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalGoldLooted || 0) - (uData.variables.totalGoldLooted || 0)).toLocaleString()}`, x: 784, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50}); //Gold Looted
-    drawCustomText(ctx, {font: 'italic 23px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.obstaclesRemoved || 0) - (uData.variables.obstaclesRemoved || 0)).toLocaleString()}`, x: 784, y: statCanvas.height - 72}); //Obstacles removed
-    ctx.drawImage( ((myData.variables.totalAttacksLost || 0) - (uData.variables.totalAttacksLost || 0)) < 0? arrDownIcon : arrUpIcon, 776, Math.floor(statCanvas.height / 4) - 3, 25, 25);
-    ctx.drawImage( ((myData.variables.totalDefensesWon || 0) - (uData.variables.totalDefensesWon || 0)) < 0? arrDownIcon : arrUpIcon, 776, Math.floor(statCanvas.height / 2) - 26, 25, 25);
-    ctx.drawImage( ((myData.variables.totalGoldLooted || 0) - (uData.variables.totalGoldLooted || 0)) < 0? arrDownIcon : arrUpIcon, 773, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 48, 25, 25);
-    ctx.drawImage( ((myData.variables.obstaclesRemoved || 0) - (uData.variables.obstaclesRemoved || 0)) < 0? arrDownIcon : arrUpIcon, 773, statCanvas.height - 70, 25, 25);
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalAttacksLost || 0) - (uData.variables.totalAttacksLost || 0)).toLocaleString()}`, x: 787, y: Math.floor(statCanvas.height / 4) - 10}); //Attacks lost
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalDefensesWon || 0) - (uData.variables.totalDefensesWon || 0)).toLocaleString()}`, x: 787, y: Math.floor(statCanvas.height / 2) - 33}); //Defenses Won
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.totalGoldLooted || 0) - (uData.variables.totalGoldLooted || 0)).toLocaleString()}`, x: 784, y: Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 55}); //Gold Looted
+    drawCustomText(ctx, {font: 'italic 20.5px Industry Black', color: "#ffffff", text: `${Math.abs((myData.variables.obstaclesRemoved || 0) - (uData.variables.obstaclesRemoved || 0)).toLocaleString()}`, x: 784, y: statCanvas.height - 77}); //Obstacles removed
+    ctx.drawImage( ((myData.variables.totalAttacksLost || 0) - (uData.variables.totalAttacksLost || 0)) < 0? arrDownIcon : arrUpIcon, 776, Math.floor(statCanvas.height / 4) - 5, 25, 25);
+    ctx.drawImage( ((myData.variables.totalDefensesWon || 0) - (uData.variables.totalDefensesWon || 0)) < 0? arrDownIcon : arrUpIcon, 776, Math.floor(statCanvas.height / 2) - 28, 25, 25);
+    ctx.drawImage( ((myData.variables.totalGoldLooted || 0) - (uData.variables.totalGoldLooted || 0)) < 0? arrDownIcon : arrUpIcon, 773, Math.floor(statCanvas.height / 2) + Math.floor(statCanvas.height / 4) - 50, 25, 25);
+    ctx.drawImage( ((myData.variables.obstaclesRemoved || 0) - (uData.variables.obstaclesRemoved || 0)) < 0? arrDownIcon : arrUpIcon, 773, statCanvas.height - 72, 25, 25);
 
 
     var testImage = new Discord.Attachment(statCanvas.toBuffer(), 'CompareStats.png');

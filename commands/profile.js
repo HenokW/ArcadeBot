@@ -145,7 +145,7 @@ function sendProfileMessage(client, message, data)
     const leagueIcon = new Discord.Attachment(leagueImgs[star], 'league_icon.png');
     let msg = new Discord.RichEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
+        .setAuthor(`${data.name} | #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
         .attachFiles([leagueIcon])
         .setThumbnail('attachment://league_icon.png')
         .addField("Current Stars", `${star} ${data.stars.toLocaleString()}`, true)
@@ -178,10 +178,11 @@ function sendProfileMessage(client, message, data)
         .addField("Obstacles Removed", `<:rw_crate:622299162557415464> ${(data.variables.obstaclesRemoved || 0).toLocaleString() || 0}`, true)
 
         .addBlankField()
-        .addField(`Commanders Unlocked`, `${commanderText} **\`${myCommanders.length}/${commanderCount}\`**`, false)
-        .addField(`Troops Unlocked`, `${troopText} **\`${myTroops.length}/${troopCount}\`**`, false)
-        .addField(`Airdrops Unlocked`, `${abilityText} **\`${myAbilities.length}/${abilityCount}\`**`, false)
-        .addField(`Defenses Unlocked`, `${defenseText} **\`${myDefenses.length}/${defenseCount}\`**`, false)
+        .addField(`Commanders Unlocked*`, `${commanderText} **\`${myCommanders.length}/${commanderCount}\`**`, false)
+        .addField(`Troops Unlocked*`, `${troopText} **\`${myTroops.length}/${troopCount}\`**`, false)
+        .addField(`Airdrops Unlocked*`, `${abilityText} **\`${myAbilities.length}/${abilityCount}\`**`, false)
+        .addField(`Defenses Unlocked*`, `${defenseText} **\`${myDefenses.length}/${defenseCount}\`**`, false)
+        .setFooter("*Troop and Defense information may be off");
         //.setFooter(`Last Seen Online: ${data.timeSinceLastActivity}`, 'attachment://green_timer.png');
 
     message.reply({embed:msg}).catch(err => {});
