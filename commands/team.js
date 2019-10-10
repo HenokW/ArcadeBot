@@ -80,7 +80,7 @@ async function sendTeamMessage(client, message, data)
 
     //Making it nice and pretty
     //--------------
-    let leader = undefined;
+    let leader = "---";
     for(let i = 0; i < data.members.length; i++)
         if(data.members[i].role == "Leader")
         {
@@ -88,11 +88,11 @@ async function sendTeamMessage(client, message, data)
             break;
         }
 
-    let temp = "";
+    let temp = "---";
     for(let i = 0; i < scoreLB.length; i++)
         temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(scoreLB[i].stars)} **\`${scoreLB[i].stars}\`** ${util.level_to_emote[scoreLB[i].expLevel]} ${scoreLB[i].name}\n`;
     scoreLB = temp;
-    temp = "";
+    temp = "---";
     for(let i = 0; i < staffLB_sorted.length; i++)
         temp += `**\`${i + 1}.\`** ${util.getLeagueMedal(staffLB_sorted[i].stars)} **\`${staffLB_sorted[i].stars}\`** ${util.level_to_emote[staffLB_sorted[i].expLevel]} ${staffLB_sorted[i].name}\n`;
     staffLB_sorted = temp;
@@ -108,7 +108,7 @@ async function sendTeamMessage(client, message, data)
         .addField("Required Score", `<:rw_medal:622260064937312256> ${data.requiredScore.toLocaleString()}`, true)
         .addField("Dominations Won", `<:rw_white_star:622579023364751361> ${data.dominationsWon.toLocaleString()}`, true)
         .addField("Members", `<:rw_troops:622260065499349032> ${data.membersCount}/${teamLimit}`, true)
-        .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name || undefined}`)
+        .addField("Leader", `<:rw_captain:622580325884624897> ${leader.name}`)
         .addField("Top Members", scoreLB, true)
         .addField("Top Staff", staffLB_sorted, true);
 

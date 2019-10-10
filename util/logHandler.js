@@ -40,7 +40,8 @@ async function main(client)
         {
             if(tags[j] == '' || channels[j] == '') continue;
 
-            let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]});
+            let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]}).catch(err => { setTimeout(function() { main(client); }, LOG_DELAY); });
+            if(!teamData) continue;
             let cleanedData = prepareData(teamData);
 
             let oldDataJson = await storage.getItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`);
@@ -77,10 +78,8 @@ async function main(client)
                 memberJoined(client, guilds[i], channels[j], cleanedArr[k], cleanedData);
             for(let k = 0; k < oldArr.length; k++)
                 memberLeave(client, guilds[i], channels[j], oldArr[k], cleanedData);
-
         }
     }
-
     setTimeout(function() { main(client); }, LOG_DELAY);
 }
 
