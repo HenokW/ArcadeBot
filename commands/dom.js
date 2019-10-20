@@ -112,11 +112,11 @@ async function sendDomMessage(client, message, data)
     troops = temp;
     //----
 
-    const dom = new Discord.Attachment('./resources/game_assets/ui_sprite_386.png', 'domination.png');
-    let msg = new Discord.RichEmbed()
+    const dom = new Discord.MessageAttachment('./resources/game_assets/ui_sprite_386.png', 'domination.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setAuthor(`${data.name} | #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
-        .attachFile(dom)
+        .attachFiles(dom)
         .setThumbnail('attachment://domination.png')
         .addField("Current Stars", `${util.getLeagueMedal(data.stars)} ${data.stars.toLocaleString()}`, true)
         .addField("Lifetime Stars", `<:rw_gold_star:622260094775853066> ${(data.variables.attackStars + data.variables.defenseStars || 0).toLocaleString()}`, true)
@@ -147,14 +147,14 @@ async function sendDomMessage(client, message, data)
 
 function saveError(client, message, tag)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField("Invalid tag provided", "Please make sure you're entering a valid player tag. You can find your tag in-game in your player profile.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     message.reply({embed:msg}).catch(error => { client.emit("error", error) });

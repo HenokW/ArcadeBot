@@ -12,3 +12,4 @@ SQL/
 package-lock.json
 config.json
 teams.js
+.bot.js

@@ -17,7 +17,7 @@ module.exports.run = async(client, message, args) =>
 		guildInfo.prefix = newfix;
 		await sqlHand.setData(client, `./SQL/guildsDB.db3`, config.sql_guildSetterQuery, "data", guildInfo);
 
-		const prefixMessage = new Discord.RichEmbed()
+		const prefixMessage = new Discord.MessageEmbed()
 			.setColor("#be243e")
 			.setDescription("Your server's prefix has successfully been set to: **`" + newfix + "`** Incase of an emergency, you can reset your server's prefix by using **`@" + client.user.username + " resetprefix`**\n\n**Guild:** `" + message.guild.name + "`\n**Changed by:**" + message.author);
 
@@ -40,7 +40,7 @@ module.exports.reset = async(client, message, args) =>
 		guildInfo.prefix = newfix;
 		await sqlHand.setData(client, `./SQL/guildsDB.db3`, config.sql_guildSetterQuery, "data", guildInfo);
 
-		const prefixMessage = new Discord.RichEmbed()
+		const prefixMessage = new Discord.MessageEmbed()
 			.setColor("#be243e")
 			.setDescription("Your server's prefix has successfully been reset to: **`" + newfix + "`**\n\n**Guild:** `" + message.guild.name + "`\n**Reset by:**" + message.author);
 

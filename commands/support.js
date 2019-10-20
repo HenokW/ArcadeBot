@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 module.exports.run = async function(client, message, args)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setTitle("Join Us!")
         .setDescription(config.server_link);

@@ -37,14 +37,20 @@ module.exports.request = async function(client, message, options)
     {
         if(endpoint != "search/")
         {
-            // setTimeout(function(){ reject(reqError(message)); }, 5000);
             request.get(`${API_URL}${endpoint}${tag}`, {timeout: TIMEOUT_DURATION})
             .then(res =>
             {
+                // console.log(options);
                 if(res.status == 200)
                     resolve(res.data);
                 else
-                    throw new Error(res.status);
+                {
+                    if(!message)
+                        reject(false);
+                    else
+                        throw new Error(res.status);
+                }
+
             })
             .catch(err =>
             {
@@ -54,13 +60,13 @@ module.exports.request = async function(client, message, options)
                         tagError(client, message);
                     }
                     else
-                        reqError(message);
+                        reject(false);
 
-                    reject(err);
                     client.emit("error", err);
                 }
                 else {
                     options.triedCount++;
+                    console.log(options);
                     module.exports.request(client, message, options);
                 }
             });
@@ -70,14 +76,14 @@ module.exports.request = async function(client, message, options)
 
 function tagError(client, message)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField("Invalid tag provided", "Please make sure you're entering a valid search tag.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     message.reply({embed:msg}).catch(error => { client.emit("error", error) });
@@ -88,9 +94,9 @@ function reqError(message)
 {
     if(!message) return;
 
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .setTitle("Uh-oh, something happened!")
         .setDescription("Please feel free to try this command again. if this issue persists, and the game isn't currently under maintenance, or hasn't recently came out of maintenance, then chances are the issue is on our end!\n\nIf this is the case, please try again later, or join our support server to let us know.");
 

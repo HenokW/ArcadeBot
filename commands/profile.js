@@ -141,9 +141,9 @@ function sendProfileMessage(client, message, data)
     }
     //-----------
 
-    //const greenTimer = new Discord.Attachment('./resources/game_assets/green_timer.png', 'green_timer.png');
-    const leagueIcon = new Discord.Attachment(leagueImgs[star], 'league_icon.png');
-    let msg = new Discord.RichEmbed()
+    //const greenTimer = new Discord.MessageAttachment('./resources/game_assets/green_timer.png', 'green_timer.png');
+    const leagueIcon = new Discord.MessageAttachment(leagueImgs[star], 'league_icon.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setAuthor(`${data.name} | #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
         .attachFiles([leagueIcon])
@@ -190,14 +190,14 @@ function sendProfileMessage(client, message, data)
 
 function saveError(client, message, tag)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField("Invalid tag provided", "Please make sure you're entering a valid player tag. You can find your tag in-game in your player profile.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     message.reply({embed:msg}).catch(error => { client.emit("error", error) });

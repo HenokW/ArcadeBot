@@ -70,11 +70,11 @@ async function sendCardInfo(client, message, data)
     troops = temp;
     //----
 
-    const upgradeIcon = new Discord.Attachment('./resources/game_assets/ui_sprite_298.png', 'upgrade.png');
-    let msg = new Discord.RichEmbed()
+    const upgradeIcon = new Discord.MessageAttachment('./resources/game_assets/ui_sprite_298.png', 'upgrade.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setAuthor(`${data.name} | #${data.tag}`, `https://www.rushstats.com/assets/level/${data.expLevel}.png`)
-        .attachFile(upgradeIcon)
+        .attachFiles(upgradeIcon)
         .setThumbnail('attachment://upgrade.png')
         .addField(`HQ Level`, `${hqEmojis[data.variables.hqLevel]} ${data.variables.hqLevel}`, true)
         .addField("Chopper Level", `<:rw_chopper:622268961077198869> ${data.variables.chopperLevel}`, true);

@@ -38,12 +38,12 @@ module.exports.run = async function(client, message, args)
 
 function saveSuccess(client, message, data)
 {
-    const errImg = new Discord.Attachment('./resources/game_assets/ui_sprite_193.png', 'check.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/game_assets/ui_sprite_193.png', 'check.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setThumbnail('attachment://check.png')
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .setTitle(`Successfully saved | ${data.name} #${data.tag}`);
 
     message.channel.stopTyping();

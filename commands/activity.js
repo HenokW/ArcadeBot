@@ -69,7 +69,7 @@ async function sendTeamMessage(client, message, data)
     }
     allActivesObject.activeFields[allActivesObject.activeFields.length] = allActives;
 
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setAuthor(`${data.name} | #${data.tag}`, data.badgeUrl)
         .setThumbnail(data.badgeUrl)

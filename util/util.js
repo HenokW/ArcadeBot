@@ -19,14 +19,14 @@ module.exports.tagCheck = function(tag)
 
 module.exports.saveError = function(client, message, tag)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField("Invalid tag provided", "Please make sure you're entering your valid player tag by using the **`save #TAG`** command. You can find your tag in-game in your player profile.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     message.channel.stopTyping();
@@ -35,13 +35,13 @@ module.exports.saveError = function(client, message, tag)
 
 module.exports.missingTagError = function(client, message, searched)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .setTitle("You don't have a tag saved")
         .setDescription("To save your tag, please use the **`save #TAG`** command. You can find your tag in-game in your player profile.")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     if(searched)
@@ -85,8 +85,8 @@ module.exports.timeInS = function() {
 module.exports.sendErrorMessage = function(message, content, type)
 {
     //.setColor("#303030")
-    const prefixMessage = new Discord.RichEmbed()
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+    const prefixMessage = new Discord.MessageEmbed()
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
 		.setColor(config.error_color)
 		.setDescription(`<:red_circle:628345905375870977> ${content}`);
 

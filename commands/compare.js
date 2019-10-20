@@ -180,7 +180,7 @@ async function compareStats(client, message, myData, uData)
     ctx.drawImage( ((myData.variables.obstaclesRemoved || 0) - (uData.variables.obstaclesRemoved || 0)) < 0? arrDownIcon : arrUpIcon, 773, statCanvas.height - 72, 25, 25);
 
 
-    var testImage = new Discord.Attachment(statCanvas.toBuffer(), 'CompareStats.png');
+    var testImage = new Discord.MessageAttachment(statCanvas.toBuffer(), 'CompareStats.png');
 	message.channel.stopTyping();
 	message.channel.send(message.author, testImage);
 }
@@ -215,14 +215,14 @@ function drawStroked(ctx, options)
 
 function saveError(client, message, tag)
 {
-    const errImg = new Discord.Attachment('./resources/invalid_tag_img.png', 'errorImg.png');
-    let msg = new Discord.RichEmbed()
+    const errImg = new Discord.MessageAttachment('./resources/invalid_tag_img.png', 'errorImg.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField("Invalid tag provided", "Please make sure you're entering a valid player tag. You can find your tag in-game in your player profile.\n\n" +
             "**Valid Numbers:** `0, 2, 8, 9`\n" +
             "**Valid Letters:** `C, G, J, L, P, Q, R, U, V, Y`")
-        .attachFile(errImg)
+        .attachFiles(errImg)
         .setImage('attachment://errorImg.png');
 
     message.reply({embed:msg}).catch(error => { client.emit("error", error) });

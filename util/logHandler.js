@@ -40,9 +40,10 @@ async function main(client)
         {
             if(tags[j] == '' || channels[j] == '') continue;
 
-            let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]}).catch(err => { setTimeout(function() { main(client); }, LOG_DELAY); });
+            let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]}).catch(err => { console.log(err); setTimeout(function() { main(client); }, LOG_DELAY); });
             if(!teamData) continue;
             let cleanedData = prepareData(teamData);
+            if(!cleanedData) continue;
 
             let oldDataJson = await storage.getItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`);
             if(typeof oldDataJson === 'undefined')
@@ -114,7 +115,7 @@ async function removeLogChannel(client, guild, channel)
 
 async function memberLeave(client, guild, channel, data, team)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
         .setAuthor(`${team.name} Logs`, team.badgeUrl)
         .addField(`Member left (${team.members.length}/25)\n`,
@@ -124,6 +125,7 @@ async function memberLeave(client, guild, channel, data, team)
     try {
         (await client.channels.get(channel)).send({embed:msg});
     } catch(err) {
+        console.log(err);
         if(err.message.includes("Cannot read property 'send' of undefined"))
             removeLogChannel(client, guild, channel);
     }
@@ -131,7 +133,7 @@ async function memberLeave(client, guild, channel, data, team)
 
 async function memberJoined(client, guild, channel, data, team)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.blue_color)
         .setAuthor(`${team.name} Logs`, team.badgeUrl)
         .addField(`New member (${team.members.length}/25)\n`,
@@ -141,6 +143,7 @@ async function memberJoined(client, guild, channel, data, team)
     try {
         (await client.channels.get(channel)).send({embed:msg});
     } catch(err) {
+        console.log(err);
         if(err.message.includes("Cannot read property 'send' of undefined"))
             removeLogChannel(client, guild, channel);
     }
@@ -148,7 +151,7 @@ async function memberJoined(client, guild, channel, data, team)
 
 async function descChange(client, guild, channel, oldData, data)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.blue_color)
         .setAuthor(`${data.name} Logs`, data.badgeUrl)
         .setDescription("**Team description changed**")
@@ -159,7 +162,7 @@ async function descChange(client, guild, channel, oldData, data)
     try {
         (await client.channels.get(channel)).send({embed:msg});
     } catch(err) {
-        console.log(err.message);
+        console.log(err);
         if(err.message.includes("Cannot read property 'send' of undefined"))
             removeLogChannel(client, guild, channel);
     }
@@ -167,7 +170,7 @@ async function descChange(client, guild, channel, oldData, data)
 
 async function scoreChange(client, guild, channel, oldData, data)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.blue_color)
         .setAuthor(`${data.name} Logs`, data.badgeUrl)
         .setDescription("**Team requirements changed**")
@@ -179,6 +182,7 @@ async function scoreChange(client, guild, channel, oldData, data)
     try {
         (await client.channels.get(channel)).send({embed:msg});
     } catch(err) {
+        console.log(err);
         if(err.message.includes("Cannot read property 'send' of undefined"))
             removeLogChannel(client, guild, channel);
     }
@@ -186,7 +190,7 @@ async function scoreChange(client, guild, channel, oldData, data)
 
 async function badgeChange(client, guild, channel, data)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.blue_color)
         .setAuthor(`${data.name} Logs`, data.badgeUrl)
         .setTitle("Team badge changed")
@@ -196,6 +200,7 @@ async function badgeChange(client, guild, channel, data)
     try {
         (await client.channels.get(channel)).send({embed:msg});
     } catch(err) {
+        console.log(err);
         if(err.message.includes("Cannot read property 'send' of undefined"))
             removeLogChannel(client, guild, channel);
     }
@@ -203,15 +208,20 @@ async function badgeChange(client, guild, channel, data)
 
 function prepareData(data)
 {
-    let nData = {
-        name: data.name,
-        badgeId: data.badgeId,
-        badgeUrl: data.badgeUrl,
-        membersCount: data.membersCount,
-        requiredScore: data.requiredScore,
-        description: data.description,
-        members: data.members
+    try
+    {
+        let nData = {
+            name: data.name,
+            badgeId: data.badgeId,
+            badgeUrl: data.badgeUrl,
+            membersCount: data.membersCount,
+            requiredScore: data.requiredScore,
+            description: data.description,
+            members: data.members
+        }
+        return nData;
+    } catch(e) {
+        client.emit("log", `Error found while prepping log data:\n${e}`);
+        return undefined;
     }
-
-    return nData;
 }

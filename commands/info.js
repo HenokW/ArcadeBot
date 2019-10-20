@@ -11,24 +11,24 @@ module.exports.run = async function(client, message, args)
     for(let i = 0; i < client.guilds.array().length; i++)
         userCount += client.guilds.array()[i].members.array().length;
 
-    let shardGuilds = await client.shard.fetchClientValues('guilds.size');
-    let shardMembers = (await client.shard.broadcastEval('this.guilds.reduce((prev, guild) => prev + guild.memberCount, 0)')).reduce((a,b) => a + b);
+    // let shardCount = await message.guild.shard.manager.totalShards;
+    // let shardMembers = (await client.shard.broadcastEval('this.guilds.reduce((prev, guild) => prev + guild.memberCount, 0)')).reduce((a,b) => a + b);
 
-    const starIcon = new Discord.Attachment('./resources/game_assets/ui_sprite_480.png', 'star_icon.png');
-    let msg = new Discord.RichEmbed()
+    const starIcon = new Discord.MessageAttachment('./resources/game_assets/ui_sprite_480.png', 'star_icon.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
-        .setThumbnail(client.user.displayAvatarURL)
-        .setAuthor(`${client.user.username} Statistics`, client.user.displayAvatarURL)
+        .setThumbnail(client.user.displayAvatarURL())
+        .setAuthor(`${client.user.username} Statistics`, client.user.displayAvatarURL())
         .addField("Developer", "StupidEdits#4461", true)
-        .addField("Servers", shardGuilds.reduce((a, b) => a + b), true)
-        .addField("Shards", ((await client.shard.fetchClientValues('guilds.size')).length || 0), true)
-        .addField("Users", shardMembers.toLocaleString(), true)
-        .addField("Ping", `${Math.floor(client.ping || 'N/A')}ms`, true)
+        .addField("Servers", client.guilds.size, true)
+        // .addField("Shards", shardCount, true)
+        .addField("Users", userCount.toLocaleString(), true)
+        .addField("Ping", `${Math.floor(client.ws.ping || 'N/A')}ms`, true)
         .addField("Latency", `${new Date() - message.createdAt}ms`, true)
         .addField("Uptime", util.formatMs(client.uptime), true)
         .addField("Version", config.version, true)
 
-        .attachFile(starIcon)
+        .attachFiles(starIcon)
         .setFooter("Powered by Zihad & 4JR's RushWars API", "attachment://star_icon.png");
 
     message.channel.stopTyping();

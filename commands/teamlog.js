@@ -1,6 +1,7 @@
 const sqlHand = require("../util/sql_handler.js");
 const apiReq = require("../util/apiRequest.js");
 const config = require("../config.json");
+const storage = require("node-persist");
 const util = require("../util/util.js");
 const Discord = require("discord.js");
 
@@ -13,7 +14,7 @@ module.exports.run = async function(client, message, args)
 
     //Check to make sure we have a channel provided, and they're staff within their team
     if(!message.mentions.channels.first()) return logError(client, message); //No channel provided, send a 'help' message
-    if(message.mentions.channels.first() != args[0]) return logError(client, message);
+    if(message.mentions.channels.first().id != args[0].replace(/["<#>"]/g, "")) return logError(client, message);
 
     let channel = message.mentions.channels.first();
     let deleteParam = args[1];
@@ -74,7 +75,7 @@ module.exports.run = async function(client, message, args)
     message.channel.stopTyping();
 }
 
-async function disableLogChannel(client, message, channel)
+async function disableLogChannel(client, message, channel, failed)
 {
     //Checks if that specified channel is being logged
     let guildLogsData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "data", "id", message.guild.id);
@@ -88,8 +89,13 @@ async function disableLogChannel(client, message, channel)
     {
         if(guildChannels[i] == channel.id)
         {
+            let sData = await storage.getItem(`${message.guild.id}-${channel.id}-${guildTags[i]}`);
+            if(sData != undefined)
+                await storage.removeItem(`${message.guild.id}-${channel.id}-${guildTags[i]}`);
+
             guildChannels.splice(i, 1);
             guildTags.splice(i, 1);
+
         }
     }
 
@@ -97,14 +103,15 @@ async function disableLogChannel(client, message, channel)
     guildLogsData.channels = guildChannels.join(',');
     await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
 
-    sendDisabledMessage(client, message, channel);
+    if(!failed)
+        sendDisabledMessage(client, message, channel);
 }
 
 function sendDisabledMessage(client, message, channel)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .setDescription(`${channel} has successfully been disabled, and is no longer a logging channel.`)
         .setTimestamp();
 
@@ -114,7 +121,7 @@ function sendDisabledMessage(client, message, channel)
 
 function sendLogChannelMessage(client, message, channel, data)
 {
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
         .setAuthor(data.name, data.badgeUrl)
         .setDescription(`${channel} has successfully been set as the logging channel for **${data.name}**!\n\n` +
@@ -122,15 +129,18 @@ function sendLogChannelMessage(client, message, channel, data)
         .setThumbnail(data.badgeUrl)
         .setTimestamp();
 
-    channel.send({embed:msg}).catch(err => { });
+    channel.send({embed:msg}).catch(err => {
+        util.sendErrorMessage(message, `It doesn't look like I have access to that channel. Unable to setup a log channel in ${channel}.`, "REPLY");
+        disableLogChannel(client, message, channel, true);
+    });
 }
 
 async function logError(client, message, err, channel)
 {
     let guildInfo = await sqlHand.getData(client, './SQL/guildsDB.db3', 'data', 'id', message.guild.id);
-    let msg = new Discord.RichEmbed()
+    let msg = new Discord.MessageEmbed()
         .setColor(config.error_color)
-        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL);
+        .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL());
 
     switch(err)
     {

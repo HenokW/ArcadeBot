@@ -72,14 +72,14 @@ function sendBoxCycle(message, data, cycle, cycle2)
     futureCycle += `${boxArr["Rare"]}` + "**`+" + cycle2["Rare"] + "`**  ";
     futureCycle += `${boxArr["Epic"]}` + "**`+" + cycle2["Epic"] + "`**  ";
 
-    const boxImg = new Discord.Attachment(getRandomBox(), 'box.png');
-    let msg = new Discord.RichEmbed()
+    const boxImg = new Discord.MessageAttachment(getRandomBox(), 'box.png');
+    let msg = new Discord.MessageEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${data.name} | #${data.tag}`, message.author.displayAvatarURL)
-        //.setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL)
+        .setAuthor(`${data.name} | #${data.tag}`, message.author.displayAvatarURL())
+        //.setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.displayAvatarURL())
         .addField(`Current box cycle`, cycle)
         .addField(`Future box cycle`, futureCycle)
-        .attachFile(boxImg)
+        .attachFiles(boxImg)
         .setThumbnail('attachment://box.png');
 
     message.reply({embed:msg}).catch(err => {});

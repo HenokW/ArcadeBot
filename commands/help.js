@@ -8,9 +8,9 @@ module.exports.run = async function(client, message, args)
     let userData = await sqlHand.getData(client, `./SQL/guildsDB.db3`, "data", "id", message.guild.id);
     let prefix = userData.prefix;
 
-    let helpMsg = new Discord.RichEmbed()
+    let helpMsg = new Discord.MessageEmbed()
         .setColor(config.success_color)
-        .setAuthor(`${client.user.username}#${client.user.discriminator}`, client.user.displayAvatarURL)
+        .setAuthor(`${client.user.username}#${client.user.discriminator}`, client.user.displayAvatarURL())
         .addField("General Commands",
         `**\`${prefix}profile\`** - Shows your in-game profile stats.\n` +
         `**\`${prefix}dom\`** - Shows your domination stats.\n` +
