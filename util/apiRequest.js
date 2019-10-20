@@ -60,14 +60,19 @@ module.exports.request = async function(client, message, options)
                         tagError(client, message);
                     }
                     else
-                        reject(false);
+                    {
+                        if(!message)
+                            reject(false);
+                        else
+                            reqError(message);
+                    }
 
                     client.emit("error", err);
                 }
                 else {
                     options.triedCount++;
                     console.log(options);
-                    module.exports.request(client, message, options);
+                    resolve(module.exports.request(client, message, options));
                 }
             });
         }

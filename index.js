@@ -128,11 +128,11 @@ client.on("log", async (options) => {
 process.on('unhandledRejection', (reason, p) =>
 {
 	// console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
-	let errStack = reason.stack;
+	let errStack = reason;
 	console.log(errStack);
 	if(errStack.length > 2048) errStack = errStack.substring(0, 2047);
 
-	if(devEnabled) return console.error(reason.stack);
+	if(devEnabled) return console.error(reason);
 	client.emit("log", p, errStack);
 
 // application specific logging, throwing an error, or other logic here
