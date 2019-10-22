@@ -48,25 +48,25 @@ async function sendCardInfo(client, message, data)
     let temp = "";
     if(commanders)
         for(let i = 0; i < commanders.length; i++)
-            temp += `${util.id_to_emote[commanders[i].scId]}**\`${commanders[i].level}\`**    `;
+            temp += `${util.id_to_emote[commanders[i].scId] || util.id_to_emote['0']}**\`${commanders[i].level}\`**    `;
     commanders = temp;
 
     temp = ""
     if(abilities)
         for(let i = 0; i < abilities.length; i++)
-            temp += `${util.id_to_emote[abilities[i].scId]}**\`${abilities[i].level}\`**    `;
+            temp += `${util.id_to_emote[abilities[i].scId] || util.id_to_emote['0']}**\`${abilities[i].level}\`**    `;
     abilities = temp;
 
     temp = ""
     if(defenses)
         for(let i = 0; i < defenses.length; i++)
-            temp += `${util.id_to_emote[defenses[i].scId]}**\`${defenses[i].level}\`**    `;
+            temp += `${util.id_to_emote[defenses[i].scId] || util.id_to_emote['0']}**\`${defenses[i].level}\`**    `;
     defenses = temp;
 
     temp = ""
     if(troops)
         for(let i = 0; i < troops.length; i++)
-            temp += `${util.id_to_emote[troops[i].scId]}**\`${troops[i].level}\`**    `;
+            temp += `${util.id_to_emote[troops[i].scId] || util.id_to_emote['0']}**\`${troops[i].level}\`**    `;
     troops = temp;
     //----
 
