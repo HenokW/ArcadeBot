@@ -150,7 +150,7 @@ client.on("message", async message =>
 	let cmd = args.shift().toLowerCase();
 
 	//If they happened to ping the bot
-	if(message.content == (client.user))
+	if(message.content.replace(/[<@>]/g, '') == (client.user))
 		return message.channel.send("For further help, please feel free to use **`" + guildInfo.prefix + "help`** for a complete rundown of all my commands.\n\n**Guild prefix:** `" + guildInfo.prefix + "`").catch(err => {});
 
 	//Prefix resetting
