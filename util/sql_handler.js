@@ -95,7 +95,7 @@ exports.setData = async function(client, sqlDir, sqlSetQuery, table, data)
         db.serialize(function()
         {
             db.run((sqlSetQuery), values, function(err) {
-                if (err)
+                if(err)
                     client.emit("error", err.message);
             });
         });
@@ -109,6 +109,37 @@ exports.setData = async function(client, sqlDir, sqlSetQuery, table, data)
 
         await db.close();
     }
+}
+
+/*
+sqlDir - SQL directory
+table - the name of the table within the desired database
+identifier - the column used to seperate unique entries
+index - the entry to remove from the db
+*/
+exports.deleteRow = async function(client, sqlDir, table, identifier, index)
+{
+    return new Promise(async (resolve, reject) =>
+    {
+        let db = new SQLite.Database(sqlDir);
+        try
+        {
+            db.serialize(function()
+            {
+                let query = db.run(`DELETE FROM ${table} WHERE ${identifier}='${index}'`);
+                //query.finalize();
+            });
+
+            db.close();
+            resolve(true);
+        }
+        catch(e) {
+            client.emit("error", e);
+            await db.close();
+
+            reject(e);
+        }
+    });
 }
 
 exports.createdb = function(client, sqlDir, table, query, uniqueValue)

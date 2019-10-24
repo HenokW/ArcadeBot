@@ -22,6 +22,9 @@
     "sql_teamLogsDBQuery": "id TEXT, tags TEXT, channels TEXT, verified TEXT",
     "sql_teamLogsDBSetterQuery": "INSERT or REPLACE INTO data(id, tags, channels, verified) VALUES (@id, @tags, @channels, @verified);",
 
+    "sql_teamLogDataDBQuery": "logID TEXT, data TEXT",
+    "sql_teamLogDataDBSetterQuery": "INSERT or REPLACE INTO logData(logID, data) VALUES (@logID, @data);",
+
     "author_id": "YOUR_ID_HERE",
     "version": "1.3.0"
 }

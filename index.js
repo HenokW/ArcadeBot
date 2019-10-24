@@ -182,11 +182,12 @@ async function startup()
 	const guildDB = "guildsDB";
 	await sqlHand.createdb(client, `./SQL/${guildDB}.db3`, "data", config.sql_guildQuery, "id");
 
-	const teamDB = "teamsDB";
-	await sqlHand.createdb(client, `./SQL/${teamDB}.db3`, "data", config.sql_teamDBQuery,"id");
+	// const teamDB = "teamsDB";
+	// await sqlHand.createdb(client, `./SQL/${teamDB}.db3`, "data", config.sql_teamDBQuery,"id");
 
 	const teamLogsDB = "teamLogsDB";
 	await sqlHand.createdb(client, `./SQL/${teamLogsDB}.db3`, "data", config.sql_teamLogsDBQuery,"id");
+	await sqlHand.createdb(client, `./SQL/${teamLogsDB}.db3`, "logData", config.sql_teamLogDataDBQuery,"logID");
 
 	//Check to make sure we haven't missed an entry while offline
 	let sqlChecks = require("./util/sqlCheck.js");

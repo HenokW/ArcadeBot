@@ -1,7 +1,6 @@
 const sqlHand = require("./sql_handler.js");
 const apiReq = require("./apiRequest.js");
 const config = require("../config.json");
-const storage = require("node-persist");
 const Discord = require("discord.js");
 const util = require("./util.js");
 const fs = require('fs');
@@ -9,20 +8,8 @@ const fs = require('fs');
 const LOG_DELAY = 300000; //How often we update our data
 module.exports.startup = async function(client)
 {
-    try
-    {
-        await storage.init(
-        {
-            stringify: JSON.stringify,
-            parse: JSON.parse,
-            encoding: "utf8",
-            ttl: false
-        });
-
-        //Resume our job
-        main(client);
-    }
-    catch(e) { client.emit("error", e); return; }
+    //Resume our job
+    main(client);
 }
 
 async function main(client)
@@ -43,17 +30,18 @@ async function main(client)
             let teamData = await apiReq.request(client, undefined, {endpoint: "team/", tag: tags[j]}).catch(err => { console.log(err); setTimeout(function() { main(client); }, LOG_DELAY); });
             if(!teamData) continue;
             let cleanedData = prepareData(teamData);
+            let strungCleanedData = JSON.stringify(cleanedData);
             if(!cleanedData) continue;
 
-            let oldDataJson = await storage.getItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`);
+            let oldDataJson = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "logData", "logID", `${guilds[i].id}-${channels[j]}-${tags[j]}`);
+            //console.log(strungCleanedData);
             if(typeof oldDataJson === 'undefined')
             {
-                await storage.setItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`, JSON.stringify(cleanedData));
+                await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogDataDBSetterQuery, "logData", {logID: `${guilds[i].id}-${channels[j]}-${tags[j]}`, data: strungCleanedData});
                 continue;
             }
-            let oldData = JSON.parse(oldDataJson);
-
-            await storage.setItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`, JSON.stringify(cleanedData));
+            let oldData = JSON.parse(oldDataJson.data);
+            await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogDataDBSetterQuery, "logData", {logID: `${guilds[i].id}-${channels[j]}-${tags[j]}`, data: strungCleanedData});
 
             //Checks-------
             if(oldData.badgeId != cleanedData.badgeId) badgeChange(client, guilds[i], channels[j], cleanedData);
@@ -87,7 +75,6 @@ async function main(client)
 async function removeLogChannel(client, guild, channel)
 {
     console.log(`> Channel has been removed from logging: ${guild.name} | ${guild.id}`);
-    //storage.setItem(`${guilds[i].id}-${channels[j]}-${tags[j]}`, JSON.stringify(cleanedData));
     let guildLogsData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "data", "id", guild.id);
 
     let guildTags = guildLogsData.tags.split(',');
@@ -97,9 +84,9 @@ async function removeLogChannel(client, guild, channel)
     {
         if(guildChannels[i] == channel)
         {
-            let sData = await storage.getItem(`${guild.id}-${channel}-${guildTags[i]}`);
+            let sData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "logData", "logID", `${guild.id}-${channel}-${guildTags[i]}`);
             if(sData != undefined)
-                await storage.removeItem(`${guild.id}-${channel}-${guildTags[i]}`);
+                await sqlHand.deleteRow(client, './SQL/teamLogsDB.db3', "logData", "logID", `${guild.id}-${channel}-${guildTags[i]}`);
 
             guildChannels.splice(i, 1);
             guildTags.splice(i, 1);

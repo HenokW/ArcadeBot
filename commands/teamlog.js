@@ -1,7 +1,6 @@
 const sqlHand = require("../util/sql_handler.js");
 const apiReq = require("../util/apiRequest.js");
 const config = require("../config.json");
-const storage = require("node-persist");
 const util = require("../util/util.js");
 const Discord = require("discord.js");
 
@@ -47,7 +46,7 @@ module.exports.run = async function(client, message, args)
             verified: true
         }
 
-        await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", sqlData);
+        await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "logData", sqlData);
         sendLogChannelMessage(client, message, message.mentions.channels.first(), requestData.team);
     }
     else
@@ -68,7 +67,7 @@ module.exports.run = async function(client, message, args)
             guildLogsData.tags = guildTags.join(',');
             guildLogsData.channels = guildChannels.join(',');
 
-            await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
+            await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "logData", guildLogsData);
             sendLogChannelMessage(client, message, message.mentions.channels.first(), requestData.team);
         }
     }
@@ -89,9 +88,9 @@ async function disableLogChannel(client, message, channel, failed)
     {
         if(guildChannels[i] == channel.id)
         {
-            let sData = await storage.getItem(`${message.guild.id}-${channel.id}-${guildTags[i]}`);
+            let sData = await sqlHand.getData(client, `./SQL/teamLogsDB.db3`, "logData", "logID", `${message.guild.id}-${channel.id}-${guildTags[i]}`);
             if(sData != undefined)
-                await storage.removeItem(`${message.guild.id}-${channel.id}-${guildTags[i]}`);
+                await sqlHand.deleteRow(client, './SQL/teamLogsDB.db3', "logData", "logID", `${message.guild.id}-${channel.id}-${guildTags[i]}`);
 
             guildChannels.splice(i, 1);
             guildTags.splice(i, 1);
@@ -101,7 +100,7 @@ async function disableLogChannel(client, message, channel, failed)
 
     guildLogsData.tags = guildTags.join(',');
     guildLogsData.channels = guildChannels.join(',');
-    await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "data", guildLogsData);
+    await sqlHand.setData(client, './SQL/teamLogsDB.db3', config.sql_teamLogsDBSetterQuery, "logData", guildLogsData);
 
     if(!failed)
         sendDisabledMessage(client, message, channel);
