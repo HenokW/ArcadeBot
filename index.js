@@ -61,29 +61,29 @@ client.on("guildDelete", async guild =>
 	if(guild.iconURL) leaveMsg.setThumbnail(guild.iconURL);
 	client.emit("log", leaveMsg);
 
-	return client.shard.broadcastEval(`
-		const channel = this.channels.get("423255381498920963");
-		if (channel) {
-			const Discord = require("discord.js");
-			let msg = new Discord.MessageEmbed()
-				.setColor("#ff0000")
-				.setTitle("Removed from a guild")
-				.setDescription('**Guild Name:** **${guild.name}**\n' +
-								'**Guild ID:** **${guild.id}**\n' +
-								'**Member Count:** **${guild.members.array().length}**')
-				.setTimestamp();
-
-			channel.send({embed:msg});
-			true;
-		}
-		else {
-			false;
-		}
-	`).then(console.log);
+	// return client.shard.broadcastEval(`
+	// 	const channel = this.channels.get("423255381498920963");
+	// 	if (channel) {
+	// 		const Discord = require("discord.js");
+	// 		let msg = new Discord.MessageEmbed()
+	// 			.setColor("#ff0000")
+	// 			.setTitle("Removed from a guild")
+	// 			.setDescription('**Guild Name:** **${guild.name}**\n' +
+	// 							'**Guild ID:** **${guild.id}**\n' +
+	// 							'**Member Count:** **${guild.members.array().length}**')
+	// 			.setTimestamp();
+	//
+	// 		channel.send({embed:msg});
+	// 		true;
+	// 	}
+	// 	else {
+	// 		false;
+	// 	}
+	// `).then(console.log);
 });
 
 client.on("error", (e) => {
-	console.error(e);
+	//console.error(e);
 	if(e.length > 1024) e = e.substring(0, 1023);
 
 	let msg = new Discord.MessageEmbed()
@@ -96,32 +96,34 @@ client.on("error", (e) => {
 
 client.on("warn", (e) => console.warn(e));
 client.on("log", async (options) => {
-	if(devEnabled) return;
+	//if(devEnabled) return;
+
 	let title = options.title || "-------";
 	let description = options.description || "-- No description provided --";
 	let color = options.color || "#FFFFFF";
 	let icon = options.icon;
-	//var logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929'); //ORIGINAL ARCADE
-	//var logChan = await client.guilds.get('346430947421323267').channels.get('423255381498920963');
+	let logChan = await client.guilds.get('622518500170137611').channels.get('622658922037116929'); //ORIGINAL ARCADE
+	// let logChan = await client.guilds.get('346430947421323267').channels.get('423255381498920963');
 
-	return client.shard.broadcastEval(`
-		const channel = this.channels.get("423255381498920963");
-		if (channel) {
-			const Discord = require("discord.js");
-			let msg = new Discord.MessageEmbed()
-				.setColor("#ff0000")
-				.setTitle("Error: Unhandled Rejection")
-				.addField("Type", '${type}')
-				.addField("Error message", '${stack}')
-				.setTimestamp();
-
-			channel.send({embed:msg});
-			true;
-		}
-		else {
-			false;
-		}
-	`).then(console.log);
+	// return client.shard.broadcastEval(`
+	// 	const channel = this.channels.get("423255381498920963");
+	// 	if (channel) {
+	// 		const Discord = require("discord.js");
+	// 		let msg = new Discord.MessageEmbed()
+	// 			.setColor("#ff0000")
+	// 			.setTitle("Error: Unhandled Rejection")
+	// 			.addField("Type", '${type}')
+	// 			.addField("Error message", '${stack}')
+	// 			.setTimestamp();
+	//
+	// 		channel.send({embed:msg});
+	// 		true;
+	// 	}
+	// 	else {
+	// 		false;
+	// 	}
+	// `).then(console.log);
+	logChan.send({embed:options});
 });
 
 // client.on("debug", (e) => console.info(e));

@@ -3,8 +3,12 @@ const Discord = require("discord.js");
 const axios = require("axios");
 
 const RETRY_LIMIT = 3; //How many times we should retry a failed request before returning an error
+const OFFLINE_LIMIT = 6; //How many consecutive failed requests before assuming the API is offline
 const TIMEOUT_DURATION = 3000; //Time in ms
 const API_URL = "https://api.rushstats.com/v1/";
+
+if(typeof FAIL_COUNT === 'undefined') FAIL_COUNT = 0;
+if(typeof API_OFFLINE === 'undefined') API_OFFLINE = false;
 let request = axios.create(
     {
         headers: {
@@ -40,7 +44,9 @@ module.exports.request = async function(client, message, options)
             request.get(`${API_URL}${endpoint}${tag}`, {timeout: TIMEOUT_DURATION})
             .then(res =>
             {
-                // console.log(options);
+                console.log(options);
+                if(FAIL_COUNT > 0) FAIL_COUNT = 0; //Reset
+
                 if(res.status == 200)
                     resolve(res.data);
                 else
@@ -67,6 +73,10 @@ module.exports.request = async function(client, message, options)
                             reqError(message);
                     }
 
+                    FAIL_COUNT++;
+
+                    if(FAIL_COUNT == OFFLINE_LIMIT) return client.emit("error", `**Fail count has reached ${FAIL_COUNT} - Is the API down?**`);
+                    else if(FAIL_COUNT > OFFLINE_LIMIT) return;
                     client.emit("error", err);
                 }
                 else {
