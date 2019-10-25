@@ -26,5 +26,5 @@
     "sql_teamLogDataDBSetterQuery": "INSERT or REPLACE INTO logData(logID, data) VALUES (@logID, @data);",
 
     "author_id": "YOUR_ID_HERE",
-    "version": "1.3.0"
+    "version": "1.3.4"
 }
