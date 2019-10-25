@@ -7,7 +7,7 @@ const fs = require("fs");
 const sqlite3 = require('sqlite3').verbose();
 const client = new Discord.Client();
 
-const devEnabled = true;
+const devEnabled = false;
 fs.readdir("./commands/", (err, files) =>
 {
 	if(err)
@@ -156,7 +156,7 @@ client.on("message", async message =>
 		return message.channel.send("For further help, please feel free to use **`" + guildInfo.prefix + "help`** for a complete rundown of all my commands.\n\n**Guild prefix:** `" + guildInfo.prefix + "`").catch(err => {});
 
 	//Prefix resetting
-	if(message.content.trim().split(' ')[0] == message.mentions.users.first() && args[0] == 'resetprefix')
+	if((message.mentions.users.size > 0) && (message.content.trim().split(' ')[0].replace(/[<@>]/g, '') == message.mentions.users.first().id) && (message.mentions.users.first().id == (client.user.id)) && (args[0] == 'resetprefix'))
 	{
 		let resetFile = require('./commands/setprefix.js');
 		return resetFile.reset(client, message, args);
