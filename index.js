@@ -41,7 +41,7 @@ client.on("guildCreate", async guild =>
 		.setDescription(`**Guild Name:** **\`${guild.name}\`**\n` +
 						`**Guild ID:** **\`${guild.id}\`**\n` +
 						`**Member Count:** **\`${guild.members.array().length}\`**`);
-	if(guild.iconURL) joinMsg.setThumbnail(guild.iconURL);
+	if(guild.iconURL()) joinMsg.setThumbnail(guild.iconURL());
 	client.emit("log", joinMsg)
 
 	//Check to make sure we haven't missed an entry while offline
@@ -58,7 +58,7 @@ client.on("guildDelete", async guild =>
 		.setDescription(`**Guild Name:** **\`${guild.name}\`**\n` +
 						`**Guild ID:** **\`${guild.id}\`**\n` +
 						`**Member Count:** **\`${guild.members.array().length}\`**`);
-	if(guild.iconURL) leaveMsg.setThumbnail(guild.iconURL);
+	if(guild.iconURL()) leaveMsg.setThumbnail(guild.iconURL());
 	client.emit("log", leaveMsg);
 
 	// return client.shard.broadcastEval(`
@@ -84,7 +84,7 @@ client.on("guildDelete", async guild =>
 
 client.on("error", (e) => {
 	//console.error(e);
-	if(e.length > 1024) e = e.substring(0, 1023);
+	if(e.message.length > 2000) e = e.message.substring(0, 1999);
 
 	let msg = new Discord.MessageEmbed()
 		.setColor("#ff0000")
@@ -135,6 +135,12 @@ process.on('unhandledRejection', (reason, p) =>
 	if(errStack.length > 2048) errStack = errStack.substring(0, 2047);
 
 	if(devEnabled) return console.error(reason);
+
+	let msg = new Discord.MessageEmbed()
+		.setColor("#ff0000")
+		.setTitle("New Error")
+		.setDescription(errStack)
+		.addField("Type", p);
 	client.emit("log", p, errStack);
 
 // application specific logging, throwing an error, or other logic here
